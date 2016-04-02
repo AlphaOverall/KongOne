@@ -9,7 +9,8 @@
 // @description      Kongregate One - One script to rule them all. Everything here.
 // ==/UserScript==
 
-
+// This script can be found on GF: https://greasyfork.org/en/scripts/9905-kongregate-one
+// Or on GH: https://github.com/AlphaOverall/KongOne
 
 
 // Small Additions by AlphaOverall (http://www.kongregate.com/accounts/AlphaOverall) 2015

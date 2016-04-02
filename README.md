@@ -1,8 +1,152 @@
 # KongOneβ
 
-<p>This script can also be downloaded on <a href="https://greasyfork.org/en/scripts/9905-kongregate-one">Greasy Fork</a>.</p>
+This userscript is an edit of <a href="http://www.kongregate.com/accounts/UnknownGuardian">UnknownGuardian</a>'s script called <A href="http://userscripts-mirror.org/scripts/show/164732">Kongregate One</a>.
 
-<p>Description below taken from <a href="http://www.kongregate.com/forums/1/topics/614435">Nomuit's masterthread</a>.
+First, to turn off and on certain aspects of the script, go to your Kongregate profile, and scroll down until you see this:
+![](http://i.imgur.com/HT14foY.png)
+
+Then choose what functions you want.
+
+Here are its basic functions:
+
+##Chat Timestamp
+**/timeformat** sets timestamp format to 12 or 24 hour
+
+**/tscolor** sets the color of timestamps. Format is /tscolor ###### (# = hex character)
+
+**/toggleseconds** shows or hids seconds in timestamps
+
+##Chat PM Notifier
+
+**/pmchime** turns Private Message chime on and off
+
+##Chat Line Highlighting
+
+**/hl** (or /highlight) followed by a list of words (separated by spaces) makes the script highlight every message that contains one of those words. Note that you don’t have to retype the list after refreshing – it gets saved!
+
+**/hluser** followed by a list of usernames highlights all messages by those users – including whispers.
+
+**/hlcolor** followed by a valid hex-color (without the leading #, so an example would be /hlcolor 00FF00) changes the color which the script uses to highlight messages to that color (Gets saved, too)
+
+**/hlfriends** toggles highlighting messages sent by your friends. If activated, your friend’s names will show up highlighted (by default green) in chat messages.
+
+**/hlmods** toggles highlighting the names of mods in chat. When activated, mods names appear orange by default, the color can be changed with /modcolor.
+
+**/hlpriority** toggles the priority of /hlmods and /hlfriends. By default, users who are both mods and your friends will be highlighted in the friend-color when activating /hlmods and /hlfriends. Use /hlpriority to make them appear in the mod-color instead.
+
+**/hlchime** toggles the chime on/off.
+
+**/whispercolor** works similar to /hlcolor, but changes the color of whispers you send/receive.
+
+**/friendcolor** changes the color of friends’ names in chat.
+
+**/modcolor** changes the color of mod-names in chat.
+
+**/hllist** lists the current settings.
+
+**/hlreset** resets all preferences to their default values.
+
+##Chat Reply-Command
+
+**/r** – Chat Reply-command – After receiving a whisper, you can type /r and it replaces it with /w {user who last whispered you}
+
+##Chat Mouseover Timestamp
+
+**Note:** When this option is checked, the other timestamp doesn't work.
+**/timeformat** sets timestamp format to 12 or 24 hour
+
+##Chat Afk Commands
+
+**/autoafk** sets auto away status for 15 minutes. Followed by a number, it sets autoafk for that amount of minutes
+
+**/afktoggle** toggles whether to send an automatic message to whispers when your status is away
+
+**/afkmessage message** sets message to show to users when afktoggle is on. If no message is specified, an automatic message is given.
+
+##Chat Resizer
+
+**/size x y** sets chat size, for instance  /size 500 500 sets chat to 500 by 500 px.
+
+**/defaultsize** - This didn't work well for me in Chrome. I'll look at it later.
+
+**/centergame** either centers the game or aligns the game to chat bottom
+
+*Every now and then, script doesn't load for some reason...*
+**/test** makes sure the script is active and if it's not it doesn't make you look as stupid as it might... (Talking from experience)
+
+##From Kongregate Get
+
+**/avglvl** gets the average level of all users in chat (also /avg, /alvl)
+**/mp** gets the most played games in the chat room. If followed by a number, shows that many games (e.g. /mp 5; also /mostplayed, /getmp)
+
+##Kongquer
+
+**/hlvl** gets the highest user level in chat (also /highlevel, /highlvl, /hlevel)
+**/llvl** gets the lowest user level in chat (also /lowlevel, /lowlvl, /llevel)
+**/levels #** gets all users of specified level, or if no level is specified, all levels in the room (also /levels # # #)
+**/levels #-#** gets all Users levels including end points between two specified numbers.
+
+**/devs** gets a list of all developers in chat (also /dev, /developer, /developers)
+**/admins** gets a list of all admins in chat (also /admin, /administrator, /administrators)
+**/mods** gets a list of all mods in chat (also /mod, /moderator, /moderators)
+
+**/username** gets... your username! Really useful one.
+**/id** gets your Kongregate Id
+**/kreds** gets your current Kreds balance
+**/level** gets your Kongregate level (also /lvl)
+**/age** gets your age
+**/email** gets your email address associated with your Kongregate account
+
+**/user username** gets info about username. If left blank, gets info about yourself, including the bunch of previous commands(also /u, /me)
+**/info** gets information about current chat (also /roominfo)
+**/botd** gets the current Badge of the Day
+
+**/friends** gets a list of all your friends
+**/online** shows friends online
+
+**/signout** signs you out of your account
+**/signup** open the Register lightbox
+**/login** opens the Login lightbox allowing you to switch accounts easily (without signing out).
+**/close** closes window (also /exit)
+**/reload** reloads the current page
+**/reloadgame** reloads the game without reloading the whole page.
+**/removegame** removes the game on the current page. Useful if you only want to chat. (Might be buggy with resizing, please share any issues)
+
+**/open** opens specified.
+e.g.
+**/open accounts AlphaOverall** opens account of user AlphaOverall
+**/open games JavelinOU tdp4-team-battle** opens game TDP4
+**/open asdf** opens a Kongregate search of asdf
+**/open** opens your account page
+
+**/khelp** opens Kongregate help page (also /konghelp, /kongregatehelp)
+**/help** will open a help page...
+**/kong** opens Kongregate home (also /kongregate)
+
+**/available username** checks if a username is already registered in the Kongregate database (Kind of ugly output as of now, trying to fix it)
+
+**/google words to search** opens a google search of words. If no specified search terms, opens google homepage.
+**/bing words to search** opens a bing search of words. If no specified search terms, opens bing homepage.
+**/yahoo words to search** opens a yahoo search of words. If no specified search terms, opens yahoo homepage.
+**/wiki words to seach** opens a wikipedia search or article of words. (also /wikipedia)
+**/youtube words to search** opens a YouTube search of words. If no specified search terms, opens YouTube homepage.
+<b>/youtube embed youtube.com/watch?v=RaNd_omStrInG</b> embeds specified video url into the Kongregate chat (default 16:9 aspect ratio)
+<b>/url http://www.somesite.com</b> opens specified site. (also /goto, /http, /www)
+<b>/mp3 http://www.somesite.com/linkedrandomaudio.mp3</b> embeds specified mp3 in Kongregate chat.
+**/img http://www.somesite.com/randomimage.png** embeds specified image in Kongregate chat.
+**/calc 4+3*8/9-2*Math.sqrt(7)** calculates the given expression. For a list of Math commands, type /calc help (also /math, /calculator)
+
+**/time** gets the current day and time (also /now, /date, /datetime)
+**/clear** clears the chat
+**/list keyword** shows a list of users with keyword in their name (case insensitive, also /userlist, /username)
+
+Note that this is my (AlphaOverall's) edited version of this script and I hope to be adding more features in the future. For now, enjoy!
+
+<p>This script can be downloaded on <a href="https://greasyfork.org/en/scripts/9905-kongregate-one">Greasy Fork</a> or <a href="https://github.com/AlphaOverall/KongOne">GitHub</a>.</p>
+
+##More Info
+
+<p>This extra description is taken from <a href="http://www.kongregate.com/forums/1/topics/614435">Nomuit's masterthread</a>.
 
 <h2>All About KongOneβ</h2>
 <p>So, you just downloaded that beautiful KongOneβ, hmm? But now, you&#8217;re asking me &#8220;but Nomuit, what do I do in it?&#8221;; I perfectly understand where you&#8217;re coming from. While a lot of this is already on the script page, I&#8217;m going to give you a breakdown of the features in this post anyway: let&#8217;s get to it!</p>

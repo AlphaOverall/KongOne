@@ -1,4 +1,9 @@
 # KongOneβ
+
+<p>This script can also be downloaded on <a href="https://greasyfork.org/en/scripts/9905-kongregate-one">Greasy Fork</a>.</p>
+
+<p>Description below taken from <a href="http://www.kongregate.com/forums/1/topics/614435">Nomuit's masterthread</a>.
+
 <h2>All About KongOneβ</h2>
 <p>So, you just downloaded that beautiful KongOneβ, hmm? But now, you&#8217;re asking me &#8220;but Nomuit, what do I do in it?&#8221;; I perfectly understand where you&#8217;re coming from. While a lot of this is already on the script page, I&#8217;m going to give you a breakdown of the features in this post anyway: let&#8217;s get to it!</p>
 <h3>Main Features</h3>

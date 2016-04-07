@@ -128,6 +128,7 @@ function main()
         //useScript("Chat Images", "games", init_chatImage, true, true);
         useScript("Chat Resizer", "games", init_chatResizer, true, true);
         useScript("Kongquer", "games", init_kongquer, true, true);
+        useScript("Whisper Catch", "games", init_whisperCatch, true, true);
 
         addScripts(false);
     }
@@ -1353,7 +1354,7 @@ function main()
         {
             CDialogue.prototype = dom.CDprototype||dom.ChatDialogue.prototype;
             console.log("pm1");
-            if (!CDialogue.prototype.new_private_message) 
+            if (!CDialogue.prototype.new_private_message)
             {
                 console.log("pm2");
                 dom._animatedFav = false;
@@ -1426,7 +1427,7 @@ function main()
                         if (holodeck._pm_chime) {
                             dom._chime.play();
                         }
-                    }				
+                    }
                 }
 
                 if(!CDialogue.prototype.showReceivedPM_notifier){
@@ -1451,7 +1452,7 @@ function main()
                     return false;
                 });
                 try{
-                    if (GM_setValue){ 
+                    if (GM_setValue){
                         var pm_chime = GM_getValue("kong_pmchime", 1);
                     }else{
                         GM_setValue = function(a,b){};
@@ -1485,7 +1486,7 @@ function main()
         var minimumWidth = 300;
 
         if(dom.holodeck){
-           
+
             var holodeck = dom.holodeck;
             holodeck.addChatCommand("size", function(l, n){
                 var m = n.match(/^\/\S+\s+(\S+)/);
@@ -1496,7 +1497,7 @@ function main()
                     window.setTimeout(function(){GM_deleteValue("kong_resize_"+location.pathname)}, 0);
                     setWidth(window._defaultChatWidth);
                     setHeight(window._defaultChatHeight, window._defaultUserlistHeight, window._currentGameCentered);
-                    
+
                     return false;
                 } else if(m && m[1] == "show"){
                     l.activeDialogue().kongBotMessage("Current chat size: width: " + window._currentChatWidth + "px, height: " + window._currentChatHeight + "px, userlist-height: " + window._currentChatUserlistHeight + "px.");
@@ -1580,7 +1581,7 @@ function main()
 
                 return false;
             });
-            
+
             holodeck.addChatCommand("draggable", function(l, n){
                 var chatwindow = document.getElementById("chat_container");
                 //chatwindow.style.overflow = "auto";
@@ -1742,7 +1743,7 @@ function main()
             holodeck.__urlregex = true;
         }
         function makeLink(user){
-            return '<a href="#" onclick="holodeck.showMiniProfile(\'' + user + '\'); return false;">' + user + '</a>'; 
+            return '<a href="#" onclick="holodeck.showMiniProfile(\'' + user + '\'); return false;">' + user + '</a>';
         }
         var holodeck = dom.holodeck;
         ChatDialogue = dom.ChatDialogue;
@@ -1767,7 +1768,7 @@ function main()
             l.activeDialogue().displayUnsanitizedMessage("Average Level in Room", avgLevel , {"class":"whisper received_whisper"}, {non_user: true});
             return false;
         });
-        if(holodeck && ChatDialogue && !holodeck._chat_commands.mostplayed) {	
+        if(holodeck && ChatDialogue && !holodeck._chat_commands.mostplayed) {
             //Credit goes entirely to Ventero for this command. Thanks for fixing the command after the Kongregate update, Vent :)
             holodeck.addChatCommand("mostplayed", function(l,n){
                 var matchArr = n.match(/\/\S+\s+(\d+)/),
@@ -1981,7 +1982,7 @@ function main()
             l.activeDialogue().displayUnsanitizedMessage("Highest Fans in Room", content, {"class":"whisper received_whisper"}, {non_user: true});
             return false;
         });
-        
+
         holodeck.addChatCommand("developer", function(l,n){
             var roomDetails = l.chatWindow().activeRoom();
             var allUsers = roomDetails.users();
@@ -2337,7 +2338,7 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
                 }
                 else {
                     open("https://www.youtube.com/results?search_query=" + z[1], "_blank");
-                } 
+                }
             }
             else {
                 open("https://www.youtube.com", "_blank");
@@ -2366,7 +2367,7 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
             return false;
         });
         holodeck.addChatCommand("time", function(l,n){
-            var today = new Date(); 
+            var today = new Date();
             var format = today.getDate() + "/" + (today.getMonth()+1)  + "/" + today.getFullYear() + ", " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
             l.activeDialogue().displayUnsanitizedMessage("Date/Time", format, {"class":"whisper received_whisper"}, {non_user: true});
             return false;
@@ -2432,7 +2433,7 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
                                                                  '<dd class="form_block" id="abuse_report_description_block">' +
                                                                  '<dl>' +
                                                                  '<span class="error_block error" id="abuse_report_description_error_block">' +
-    
+
                                                                  '</span>' +
                                                                  '<dd class="label_block" id="abuse_report_description_label_block">' +
                                                                  '<label for="abuse_report_description" id="abuse_report_description_label">Please describe your reason for reporting ' + m[0] + ' using as much detail as possible. We don\'t need chat logs:</label>' +
@@ -2450,7 +2451,7 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
                                                                  '</p>' +
                                                                  '</form></div>' +
                                                                  '</div>', {"class":"whisper received_whisper"}, {non_user: true});
-                    
+
                 }
             }
             return false;
@@ -2480,6 +2481,63 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
         holodeck._chat_commands.hlvl = holodeck._chat_commands.highlevel = holodeck._chat_commands.hlevel = holodeck._chat_commands.highlvl;
         holodeck._chat_commands.llvl = holodeck._chat_commands.lowlevel = holodeck._chat_commands.llevel = holodeck._chat_commands.lowlvl;
         holodeck._chat_commands.mp = holodeck._chat_commands.getmp = holodeck._chat_commands.mostplayed;
+    }
+
+    function init_whisperCatch() {
+        var WHISPERS_SAVED_KEY      = "wc-whispers_saved",
+            WHISPER_WAIT_TIME_KEY   = "wc-whisper_wait_time_key",
+            WHISPER_WAIT_TIME       = 1000 * (parseInt(localStorage.getItem(WHISPER_WAIT_TIME_KEY) || 15)),
+            CHAT_DIALOGUE_RETRY     = 100;
+
+        var CDialogue = dom.ChatDialogue;
+
+        var removeWhisper = function (w) {
+            var whispers    = (JSON.parse(localStorage.getItem(WHISPERS_SAVED_KEY)) || []).filter(function (o) { return o.id != w.id; });
+
+            localStorage.setItem(WHISPERS_SAVED_KEY, JSON.stringify(whispers));
+        };
+
+        var f = function () {
+            var chatDialogue    = holodeck.activeDialogue(),
+                whispers        = JSON.parse(localStorage.getItem(WHISPERS_SAVED_KEY)) || [];
+
+            if (!chatDialogue)
+                return;
+
+            while (whispers.length > 0) {
+                var w   = whispers.shift();
+                chatDialogue.receivedPrivateMessage(w);
+            }
+
+            clearInterval(__wc_interval);
+        };
+
+        holodeck.__wc_whisperCount  = 0;
+        CDialogue.prototype.__wc_receivedPrivateMessage = CDialogue.prototype.receivedPrivateMessage;
+        CDialogue.prototype.receivedPrivateMessage      = function (a) {
+            this.__wc_receivedPrivateMessage(a);
+
+            a.id    = holodeck.__wc_whisperCount;
+
+            var whispers    = JSON.parse(localStorage.getItem(WHISPERS_SAVED_KEY)) || [];
+            whispers.push(a);
+            localStorage.setItem(WHISPERS_SAVED_KEY, JSON.stringify(whispers));
+            setTimeout(removeWhisper, WHISPER_WAIT_TIME, a);
+        };
+
+        var __wc_interval = setInterval(f, CHAT_DIALOGUE_RETRY);
+
+        holodeck.addChatCommand('wctime', function (holodeck, str) {
+            var args    = str.split(' ').slice(1),
+                time    = parseInt(args[0]);
+
+            if (!isNaN(time)) {
+                localStorage.setItem(WHISPER_WAIT_TIME_KEY, time);
+                holodeck.activeDialogue().displayUnsanitizedMessage("Kong Bot", "Whisper save time set to "+ time +" seconds.", {"class":"whisper received_whisper"}, {non_user: true});
+            }
+
+            return false
+        });
     }
 }
 

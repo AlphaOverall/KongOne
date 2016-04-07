@@ -2402,60 +2402,60 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
             holodeck._active_dialogue.clear();
             return false;
         });
-        holodeck.addChatCommand("report", function(l,n){
-            var z = n.match(/^\/\S+\s+(.+)/);
-            if (z) {
-                m = z[1].split(" ");
-                if (m[0] == "help"){
-                    l.activeDialogue().displayUnsanitizedMessage("Report Help", "To report someone, type /report username message, or just /report username. Both cases will bring up the report box in chat.", {"class":"whisper received_whisper"}, {non_user: true});
-                }
-                else if (m[0] == null){
-                    l.activeDialogue().displayUnsanitizedMessage("Report", "Invalid report format", {"class":"whisper received_whisper"}, {non_user: true});
-                }
-                else {
-                    var message;
-                    if (m[1] != undefined) {
-                        var m2 = m.join(" ");
-                        message = m2.substr(m2.indexOf(' ')+1);
-                    }
-                    else { message = "";}
-                    active_room.showChatNag(' ' +
-                                                                 '<div id="new_abuse_report" class="mvm mrl"><div id="abuse_form_internal" class="cntrBasic pam">' +
-                                                                 '<form accept-charset="UTF-8" action="http://www.kongregate.com/accounts/' + m[0] + '/abuse_reports" method="post" onsubmit="new Ajax.Request(\'http://www.kongregate.com/accounts/aidansos132231/abuse_reports\', {asynchronous:true, evalScripts:true, method:\'post\', parameters:Form.serialize(this)}); return false;"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="ub9xDEoiIi+lRAPWsUL2yApjKAbA2XKTjRO/taF1zwE="></div>' +
-                                                                 '<dl>' +
-                                                                 '<dd class="report_options"><select id="select_type" label="Abuse Type" name="type" onchange="subjectChanged(\'' + m[0] + '\')">' +
-                                                                 '<option value="InappropriateUsernameReport">Inappropriate Username</option>' +
-                                                                 '<option value="InappropriateAvatarReport">Inappropriate Avatar</option>' +
-                                                                 '<option value="InappropriateProfileReport">Offensive Profile Content</option>' +
-                                                                 '<option selected="selected" value="InappropriateChatReport">Chat Behavior</option>' +
-                                                                 '<option value="OtherAbuseReport">Other</option></select></dd>' +
-                                                                 '<div id="description_field">' +
-                                                                 '<dd class="form_block" id="abuse_report_description_block">' +
-                                                                 '<dl>' +
-                                                                 '<span class="error_block error" id="abuse_report_description_error_block">' +
-
-                                                                 '</span>' +
-                                                                 '<dd class="label_block" id="abuse_report_description_label_block">' +
-                                                                 '<label for="abuse_report_description" id="abuse_report_description_label">Please describe your reason for reporting ' + m[0] + ' using as much detail as possible. We don\'t need chat logs:</label>' +
-                                                                 '</dd>' +
-                                                                 '<dd id="abuse_report_description_control_block" class="input_block"><textarea cols="55" id="abuse_report_description" name="abuse_report[description]" rows="4">' + message + '</textarea></dd>' +
-                                                                 '</dl>' +
-                                                                 '</dd>' +
-
-                                                                 '</div>' +
-                                                                 '</dl>' +
-
-                                                                 '<p class="report_submission">' +
-                                                                 '<input class="submission_button" id="abuse_form_submit" onclick="try{}catch(e){};if(!this.elem_abuse_form_submit){this.elem_abuse_form_submit=$(\'abuse_form_submit\');this.spin_abuse_form_submit=$(\'abuse_form_submit_spinner\');this.restore=function(t){return function(){t.elem_abuse_form_submit.show();t.spin_abuse_form_submit.hide();Event.stopObserving(window, \'unload\', t.restore);}}(this);}this.elem_abuse_form_submit.hide();this.spin_abuse_form_submit.show();Event.observe(window, \'unload\', this.restore);" type="submit" value="submit"><span class="spinner" id="abuse_form_submit_spinner" style="display:none" title="loading…">​</span>' +
-                                                                 '<a href="#" onclick="$(\'abuse_form_internal\').remove(); return false;">cancel</a>' +
-                                                                 '</p>' +
-                                                                 '</form></div>' +
-                                                                 '</div>', {"class":"whisper received_whisper"}, {non_user: true});
-
-                }
-            }
-            return false;
-        });
+        // holodeck.addChatCommand("report", function(l,n){
+        //     var z = n.match(/^\/\S+\s+(.+)/);
+        //     if (z) {
+        //         m = z[1].split(" ");
+        //         if (m[0] == "help"){
+        //             l.activeDialogue().displayUnsanitizedMessage("Report Help", "To report someone, type /report username message, or just /report username. Both cases will bring up the report box in chat.", {"class":"whisper received_whisper"}, {non_user: true});
+        //         }
+        //         else if (m[0] == null){
+        //             l.activeDialogue().displayUnsanitizedMessage("Report", "Invalid report format", {"class":"whisper received_whisper"}, {non_user: true});
+        //         }
+        //         else {
+        //             var message;
+        //             if (m[1] != undefined) {
+        //                 var m2 = m.join(" ");
+        //                 message = m2.substr(m2.indexOf(' ')+1);
+        //             }
+        //             else { message = "";}
+        //             active_room.showChatNag(' ' +
+        //                                                          '<div id="new_abuse_report" class="mvm mrl"><div id="abuse_form_internal" class="cntrBasic pam">' +
+        //                                                          '<form accept-charset="UTF-8" action="http://www.kongregate.com/accounts/' + m[0] + '/abuse_reports" method="post" onsubmit="new Ajax.Request(\'http://www.kongregate.com/accounts/aidansos132231/abuse_reports\', {asynchronous:true, evalScripts:true, method:\'post\', parameters:Form.serialize(this)}); return false;"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="ub9xDEoiIi+lRAPWsUL2yApjKAbA2XKTjRO/taF1zwE="></div>' +
+        //                                                          '<dl>' +
+        //                                                          '<dd class="report_options"><select id="select_type" label="Abuse Type" name="type" onchange="subjectChanged(\'' + m[0] + '\')">' +
+        //                                                          '<option value="InappropriateUsernameReport">Inappropriate Username</option>' +
+        //                                                          '<option value="InappropriateAvatarReport">Inappropriate Avatar</option>' +
+        //                                                          '<option value="InappropriateProfileReport">Offensive Profile Content</option>' +
+        //                                                          '<option selected="selected" value="InappropriateChatReport">Chat Behavior</option>' +
+        //                                                          '<option value="OtherAbuseReport">Other</option></select></dd>' +
+        //                                                          '<div id="description_field">' +
+        //                                                          '<dd class="form_block" id="abuse_report_description_block">' +
+        //                                                          '<dl>' +
+        //                                                          '<span class="error_block error" id="abuse_report_description_error_block">' +
+        //
+        //                                                          '</span>' +
+        //                                                          '<dd class="label_block" id="abuse_report_description_label_block">' +
+        //                                                          '<label for="abuse_report_description" id="abuse_report_description_label">Please describe your reason for reporting ' + m[0] + ' using as much detail as possible. We don\'t need chat logs:</label>' +
+        //                                                          '</dd>' +
+        //                                                          '<dd id="abuse_report_description_control_block" class="input_block"><textarea cols="55" id="abuse_report_description" name="abuse_report[description]" rows="4">' + message + '</textarea></dd>' +
+        //                                                          '</dl>' +
+        //                                                          '</dd>' +
+        //
+        //                                                          '</div>' +
+        //                                                          '</dl>' +
+        //
+        //                                                          '<p class="report_submission">' +
+        //                                                          '<input class="submission_button" id="abuse_form_submit" onclick="try{}catch(e){};if(!this.elem_abuse_form_submit){this.elem_abuse_form_submit=$(\'abuse_form_submit\');this.spin_abuse_form_submit=$(\'abuse_form_submit_spinner\');this.restore=function(t){return function(){t.elem_abuse_form_submit.show();t.spin_abuse_form_submit.hide();Event.stopObserving(window, \'unload\', t.restore);}}(this);}this.elem_abuse_form_submit.hide();this.spin_abuse_form_submit.show();Event.observe(window, \'unload\', this.restore);" type="submit" value="submit"><span class="spinner" id="abuse_form_submit_spinner" style="display:none" title="loading…">​</span>' +
+        //                                                          '<a href="#" onclick="$(\'abuse_form_internal\').remove(); return false;">cancel</a>' +
+        //                                                          '</p>' +
+        //                                                          '</form></div>' +
+        //                                                          '</div>', {"class":"whisper received_whisper"}, {non_user: true});
+        //
+        //         }
+        //     }
+        //     return false;
+        // });
         holodeck.addChatCommand("cry", function(l,n){
             l.activeDialogue().displayUnsanitizedMessage("You're sad!", "(　-̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥᷄◞ω◟-̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥᷅ )", {"class":"whisper received_whisper"}, {non_user: true});
             return false;

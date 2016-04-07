@@ -1,5 +1,7 @@
 # KongOneβ
 
+### Version 1.2.4
+
 This userscript is an edit of <a href="http://www.kongregate.com/accounts/UnknownGuardian">UnknownGuardian</a>'s script called <A href="http://userscripts-mirror.org/scripts/show/164732">Kongregate One</a>.
 
 First, to turn off and on certain aspects of the script, go to your Kongregate profile, and scroll down until you see this:
@@ -237,6 +239,3 @@ Note that this is my (AlphaOverall's) edited version of this script and I hope t
 <p>So, just uncheck any you&#8217;re not interested in, and refresh!</p>
 
 <p>Taken from <a href="http://www.kongregate.com/forums/1/topics/614435">Nomuit's masterthread</a>.
-
-
-

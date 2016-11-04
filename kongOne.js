@@ -1,15 +1,14 @@
 // ==UserScript==
 // @name             Kongregate One
 // @namespace        profusiongames.com
-// @author           UnknownGuardian, AlphaOverall
-// @version          1.2.4
+// @author           UnknownGuardian, AlphaOverall, Ruudiluca
+// @version          1.2.5
 // @date             04/19/2013
-// @include          http://www.kongregate.com/games/*/*
-// @include          http://www.kongregate.com/accounts/*
+// @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
 // ==/UserScript==
 
-// This script can be found on GF: https://greasyfork.org/en/scripts/9905-kongregate-one
+// This script can be found on GF: https://greasyfork.org/scripts/9905
 // Or on GH: https://github.com/AlphaOverall/KongOne
 
 
@@ -114,9 +113,8 @@ function main()
         dom.holodeckInterval = dom.setInterval(checkIfHolodeckLoaded, 100)
         dom.oneScriptsInitialize = [];
 
-        useScript("this", "accounts", init_showScriptOptions, false, true);
         useScript("Chat Timestamp", "games", init_chatTimestamp, true, true);
-        useScript("Chat PM Notifier", "games", init_PMNotifier, true, true);
+        useScript("Chat Whisper Notifier", "games", init_WhisperNotifier, true, true);
         useScript("Chat Line Highlighting", "games", init_chatLineHighlighting, true, true);
         useScript("Chat Reply-command", "games", init_replyCommand, true, true);
         //useScript("Chat Reply-command (hotkey)", "games", init_replyHotkey, true, true);
@@ -129,6 +127,7 @@ function main()
         useScript("Chat Resizer", "games", init_chatResizer, true, true);
         useScript("Kongquer", "games", init_kongquer, true, true);
         useScript("Whisper Catch", "games", init_whisperCatch, true, true);
+        init_showScriptOptions();
 
         addScripts(false);
     }
@@ -188,30 +187,43 @@ function main()
     function init_showScriptOptions()
     {
         console.log("init shot script")
-        var div = new Element("div", {"style":"background-color:#FFF;padding: 8px;"}).update("<h2>Scripts</h2>Enable - Script Name<p></p>");
-        $("profile_aside").down().insert(div);
+        var dContainer = new Element("div", {"style":"background-color:#00000080;position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:10000;display:none;"});
+        var div = new Element("div", {"style":"background-color:#FFF;font:normal 11px/15px 'Lucida Grande',Verdana,Arial,sans-serif;padding:8px;display:none;position:fixed;transform:translate(-50%, -50%);top:50%;left:50%;z-index:10000;"}).update("<h2>Scripts</h2>Enable - Script Name<p></p>");
+        dContainer.onclick = toggleVisibility;
+        document.body.appendChild(dContainer);
+        document.body.appendChild(div);
         dom.oneScriptsInitialize.each(function(item)
                                       {
-                                          if(item.name == "this")
-                                              return true; //aka, continue for each loops
-
                                           var span = new Element("span", {"style":"margin-top: 5px !important;display: block;"});
                                           div.insert(span);
 
                                           var checkbox = new Element("input", {"type":"checkbox", "id":"onescript-" + item.name, "style":"margin-top:2px;vertical-align:top;margin-right:8px;"});
                                           var label = new Element("label", {"class":"pls"})
-                                          checkbox.checked = GM_getValue(checkbox.id,item.defaultEnabled?"true":"false") == "true";
-                                          label.update(item.name);
+                                          checkbox.checked = GM_getValue(checkbox.id,item.defaultEnabled?"true":"false") == "true";                              
+                                          label.insert(checkbox);
+                                          label.insert(item.name);
 
-
-
-                                          span.insert(checkbox);
                                           span.insert(label);
-
-
+          
                                           checkbox.onchange = toggleScript;
                                       });
-
+      var exitCon = new Element("div", {"style":"width:100%;"});
+      var exit = new Element("button", {"class":"btn btn_wide btn_action","style":"display:block;margin:6px auto auto;"}).update("Exit");
+      exit.onclick = toggleVisibility;
+      exitCon.insert(exit);
+      div.insert(exitCon);
+      var note = new Element("p").update("Refresh to apply your changes.");
+      div.insert(note);
+      var sOB = document.getElementById("welcome_box_sign_out");
+      var sButton = document.createElement("li");
+      sButton.innerHTML = "<a href='#' style='border-bottom: 1px dotted #9b9a9a;display: inline;padding: 0px 5px 10px 5px;'>KongOne</a>";
+      sButton.onclick = toggleVisibility;
+      sOB.parentNode.parentNode.insertBefore(sButton, sOB.parentNode);
+      var gFrame = document.getElementById("game");
+      function toggleVisibility(){
+        if(dContainer.style.display != "none") { dContainer.style.display = "none"; div.style.display = "none"; gFrame.style.visibility = "visible";}
+        else { dContainer.style.display = ""; div.style.display = ""; gFrame.style.visibility = "hidden";}
+      }
     }
 
     function toggleScript()
@@ -411,11 +423,11 @@ function main()
                        (this.searchUser(user.toLowerCase()) ||
                         this.searchText(msg.toLowerCase()))) {
                         classes += " highlight";
-                        if(typeof this.new_private_message === "function") {
-                            var oldChime = holodeck._pm_chime;
-                            holodeck._pm_chime = holodeck._hl_chime;
-                            this.new_private_message();
-                            holodeck._pm_chime = oldChime;
+                        if(typeof this.new_whisper === "function") {
+                            var oldChime = holodeck._whisper_chime;
+                            holodeck._whisper_chime = holodeck._hl_chime;
+                            this.new_whisper();
+                            holodeck._whisper_chime = oldChime;
                         }
                     }
 
@@ -696,13 +708,13 @@ function main()
                     this.oldreply(a);
                 }
 
-                if(!CDialogue.prototype.showReceivedPM){
-                    CDialogue.prototype.showReceivedPM = CDialogue.prototype.receivedPrivateMessage;
-                    CDialogue.prototype.receivedPrivateMessage = function(a){
+                if(!CDialogue.prototype.showReceivedWhisper){
+                    CDialogue.prototype.showReceivedWhisper = CDialogue.prototype.receivedWhisper;
+                    CDialogue.prototype.receivedWhisper = function(a){
                         if (a.data.success){
                             this.reply(a.data.from)
                         }
-                        this.showReceivedPM(a);
+                        this.showReceivedWhisper(a);
                     }
                 }
 
@@ -759,7 +771,7 @@ function main()
                                 };
                                 this.setInput(z)
                             }else{
-                                this._holodeck.insertPrivateMessagePrefixFor(reply);
+                                this._holodeck.insertWhisperPrefixFor(reply);
                             }
                         }else if(this.cnt>l){
                             z=node.getValue();
@@ -795,13 +807,13 @@ function main()
                     this.oldreplyHotkey(a);
                 }
 
-                if(!CDialogue.prototype.showReceivedPM){
-                    CDialogue.prototype.showReceivedPM = CDialogue.prototype.receivedPrivateMessage;
-                    CDialogue.prototype.receivedPrivateMessage = function(a){
+                if(!CDialogue.prototype.showReceivedWhisper){
+                    CDialogue.prototype.showReceivedWhisper = CDialogue.prototype.receivedWhisper;
+                    CDialogue.prototype.receivedWhisper = function(a){
                         if (a.data.success){
                             this.reply(a.data.from)
                         }
-                        this.showReceivedPM(a);
+                        this.showReceivedWhisper(a);
                     }
                 }
                 holodeck._replyHotkey= new Array();
@@ -973,7 +985,7 @@ function main()
                     this._private_message_node.stopObserving('click');
                     this._private_message_observer = dom.CapturesToInlineRegistration.decorate(function(event){
                         // just put /w <username> in the chat input field
-                        cw.insertPrivateMessagePrefixFor(username);
+                        cw.insertWhisperPrefixFor(username);
                         dom.Event.stop(event);
                         return false;
                     });
@@ -1229,13 +1241,13 @@ function main()
                 });
 
                 // Outgoing whispers aren't filtered (yet), so check them manually...
-                if(!CWindow.prototype.oldSendPrivateMessageAFK){
-                    CWindow.prototype.oldSendPrivateMessageAFK = CWindow.prototype.sendPrivateMessage;
-                    CWindow.prototype.sendPrivateMessage = function(user, msg){
+                if(!CWindow.prototype.oldSendWhisperAFK){
+                    CWindow.prototype.oldSendWhisperAFK = CWindow.prototype.sendWhisper;
+                    CWindow.prototype.sendWhisper = function(user, msg){
                         if(msg.indexOf(this._holodeck._afkprefix)!=0){
                             this._holodeck.checkAFK();
                         }
-                        this.oldSendPrivateMessageAFK(user, msg);
+                        this.oldSendWhisperAFK(user, msg);
                     }
                 }
 
@@ -1257,16 +1269,16 @@ function main()
                     CDialogue.prototype.reply = function(a){}
                 }
 
-                if(!CDialogue.prototype.showReceivedPM){
-                    CDialogue.prototype.showReceivedPM = CDialogue.prototype.receivedPrivateMessage;
+                if(!CDialogue.prototype.showReceivedWhisper){
+                    CDialogue.prototype.showReceivedWhisper = CDialogue.prototype.receivedWhisper;
                 }
 
-                CDialogue.prototype.receivedPrivateMessage = function(a){
+                CDialogue.prototype.receivedWhisper = function(a){
                     if (a.data.success){
                         this.reply(a.data.from);
-                        if(this._holodeck._afk && Base64.decode(a.data.message).indexOf(this._holodeck._afkprefix)!=0){this.sendPrivateMessage(a.data.from, this._holodeck._afkprefix+this._holodeck._afkmessage)}
+                        if(this._holodeck._afk && Base64.decode(a.data.message).indexOf(this._holodeck._afkprefix)!=0){this.sendWhisper(a.data.from, this._holodeck._afkprefix+this._holodeck._afkmessage)}
                     }
-                    this.showReceivedPM(a);
+                    this.showReceivedWhisper(a);
                 }
 
                 holodeck._afk = 0;
@@ -1343,10 +1355,10 @@ function main()
     }
 
     //============
-    // PM Notifier (MrSpontaneous attribution applies
+    // Whisper Notifier (MrSpontaneous attribution applies
     // http://userscripts.org/scripts/review/48979
     //============
-    function init_PMNotifier()
+    function init_WhisperNotifier()
     {
         var holodeck = dom.holodeck,
             CDialogue = dom.ChatDialogue;
@@ -1354,7 +1366,7 @@ function main()
         {
             CDialogue.prototype = dom.CDprototype||dom.ChatDialogue.prototype;
             console.log("pm1");
-            if (!CDialogue.prototype.new_private_message)
+            if (!CDialogue.prototype.new_whisper)
             {
                 console.log("pm2");
                 dom._animatedFav = false;
@@ -1415,7 +1427,7 @@ function main()
                 dom._staticFavLinkAttr = {'rel':'shortcut icon',  'href':'/favicon.ico', 'type':'image/x-icon'};
                 dom._animatedFavLinkAttr = { 'rel':'shortcut icon', 'href':'data:image/gif;base64,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%3D', 'type':'image/gif'};
                 console.log("pm8");
-                CDialogue.prototype.new_private_message = function() {
+                CDialogue.prototype.new_whisper = function() {
                     console.log("got pm 1");
                     if (_blurred || (document.hidden != undefined && document.hidden) || (document.webkitHidden != undefined && document.webkitHidden)) {
                         console.log("got pm blurred");
@@ -1430,39 +1442,39 @@ function main()
                     }
                 }
 
-                if(!CDialogue.prototype.showReceivedPM_notifier){
-                    CDialogue.prototype.showReceivedPM_notifier = CDialogue.prototype.receivedPrivateMessage;
-                    CDialogue.prototype.receivedPrivateMessage = function(a){
+                if(!CDialogue.prototype.showReceivedWhisper_notifier){
+                    CDialogue.prototype.showReceivedWhisper_notifier = CDialogue.prototype.receivedWhisper;
+                    CDialogue.prototype.receivedWhisper = function(a){
                         if (a.data.success && !this._user_manager.isMuted(a.data.from)) {
-                            this.new_private_message();
+                            this.new_Whisper();
                         }
-                        this.showReceivedPM_notifier(a);
+                        this.showReceivedWhisper_notifier(a);
                     }
                 }
 
-                holodeck.addChatCommand("pmchime", function (l,n){
-                    if(l._pm_chime) {
-                        l._pm_chime = 0;
-                        l.activeDialogue().kongBotMessage("PM chime is OFF");
+                holodeck.addChatCommand("whisperchime", function (l,n){
+                    if(l._whisper_chime) {
+                        l._whisper_chime = 0;
+                        l.activeDialogue().kongBotMessage("Whisper chime is OFF");
                     } else {
-                        l._pm_chime = 1;
-                        l.activeDialogue().kongBotMessage("PM chime is ON");
+                        l._whisper_chime = 1;
+                        l.activeDialogue().kongBotMessage("Whisper chime is ON");
                     }
-                    window.setTimeout(function(){GM_setValue("kong_pmchime", l._pm_chime);}, 0);
+                    window.setTimeout(function(){GM_setValue("kong_whisperchime", l._whisper_chime);}, 0);
                     return false;
                 });
                 try{
                     if (GM_setValue){
-                        var pm_chime = GM_getValue("kong_pmchime", 1);
+                        var whisper_chime = GM_getValue("kong_whisperchime", 1);
                     }else{
                         GM_setValue = function(a,b){};
-                        var pm_chime = 1;
+                        var whisper_chime = 1;
                     }
                 }catch(e){
                     GM_setValue = function(a,b){};
-                    var pm_chime = 1;
+                    var whisper_chime = 1;
                 }
-                holodeck._pm_chime = pm_chime;
+                holodeck._whisper_chime = whisper_chime;
             }
         }
     }

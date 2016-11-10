@@ -3,7 +3,7 @@
 class WhisperCatch extends HolodeckScript {
 
     constructor() {
-        super.constructor('Whisper Catch', 'games', true);
+        super('Whisper Catch', 'games', true);
     }
 
     run() {
@@ -23,7 +23,7 @@ class WhisperCatch extends HolodeckScript {
             setTimeout(this.removeWhisper, WhisperCatch.WHISPER_WAIT_TIME, a);
         };
 
-        this.__wc_interval = setInterval(restoreWhispers, WhisperCatch.CHAT_DIALOGUE_RETRY);
+        this.__wc_interval = setInterval(() => { this.restoreWhispers(); }, WhisperCatch.CHAT_DIALOGUE_RETRY);
 
         holodeck.addChatCommand('wctime', function(holodeck, str) {
             let args = str.split(' ').slice(1),

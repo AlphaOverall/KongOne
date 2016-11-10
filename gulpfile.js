@@ -7,6 +7,7 @@ const gulp      = require('gulp'),
       minifier  = require('gulp-uglify/minifier'),
       es6tr     = require('gulp-es6-transpiler'),
       jshint    = require('gulp-jshint'),
+      babel     = require('gulp-babel'),
       del       = require('del'),
       pump      = require('pump')
 
@@ -30,16 +31,17 @@ gulp.task('build', ['clean', 'lint'], function () {
 
 gulp.task('es6', ['build'], function () {
   return gulp.src('bin/kongOne.user.js')
-    .pipe(es6tr({
-      environments: ['browser', 'devel', 'prototypejs'],
-      globals: {
-        unsafeWindow: false,
-        GM_getValue: true,
-        GM_setValue: true,
-        GM_deleteValue: true,
-        holodeck: false
-      }
-    }))
+    // .pipe(es6tr({
+    //   environments: ['browser', 'devel', 'prototypejs'],
+    //   globals: {
+    //     unsafeWindow: false,
+    //     GM_getValue: true,
+    //     GM_setValue: true,
+    //     GM_deleteValue: true,
+    //     holodeck: false
+    //   }
+    // }))
+    .pipe(babel({presets: ['es2015']}))
     .pipe(gulp.dest('bin'));
 });
 

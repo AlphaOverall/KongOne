@@ -1,6 +1,6 @@
 # KongOneβ
 
-### Version 1.2.4
+### Version 2.0
 
 This userscript is an edit of <a href="http://www.kongregate.com/accounts/UnknownGuardian">UnknownGuardian</a>'s script called <A href="http://userscripts-mirror.org/scripts/show/164732">Kongregate One</a>.
 
@@ -239,3 +239,23 @@ Note that this is my (AlphaOverall's) edited version of this script and I hope t
 <p>So, just uncheck any you&#8217;re not interested in, and refresh!</p>
 
 <p>Taken from <a href="http://www.kongregate.com/forums/1/topics/614435">Nomuit's masterthread</a>.
+
+### Do you want to help?
+
+Do you want to add another script? Tell the devs that mantain this repo so they can include it.
+
+If you know how to issue a pull request, go ahead! We will check that everything works when your script is integrated with KongOne and fix it if necessary!
+
+If you want to mantain KongOne, there are some things you need to do before. Don't worry! It's super easy!
+
+1. Install Node.JS and npm:
+
+  * Windows: http://blog.teamtreehouse.com/install-node-js-npm-windows
+  * Mac: http://blog.teamtreehouse.com/install-node-js-npm-mac
+
+2. Install Gulp globally using npm. Open the console and run:
+  ```
+  npm install -g gulp
+  ```
+
+And that's it! If you want to build the script, run `gulp` and the KongOne userscript will be automatically generated inside `bin/` with your scripts.

@@ -2,7 +2,7 @@
 
 class HolodeckScript extends Script {
   constructor(name, path, defaultEnabled) {
-    super.constructor(name, path, defaultEnabled);
+    super(name, path, defaultEnabled);
     this.holodeckCheckCounter = 0;
   }
 

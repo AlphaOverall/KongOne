@@ -19,16 +19,15 @@
     let optionsScript = new ShowScriptOptions();
     let scripts = [
         optionsScript,
-        new WhisperCatch(),
-        new ChatTimestamp()
+        new ChatTimestamp(),
+        new PmNotifier(),
+        new WhisperCatch()
     ];
 
     optionsScript.scripts = scripts;
 
     scripts.each((script) => script.initialize());
 
-    // useScript("this", "accounts", init_showScriptOptions, false, true);
-    // useScript("Chat Timestamp", "games", init_chatTimestamp, true, true);
     // useScript("Chat PM Notifier", "games", init_PMNotifier, true, true);
     // useScript("Chat Line Highlighting", "games", init_chatLineHighlighting, true, true);
     // useScript("Chat Reply-command", "games", init_replyCommand, true, true);

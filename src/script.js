@@ -25,4 +25,8 @@ class Script {
         this.added = true;
     }
   }
+
+  run() {
+    throw `run() not implemented for #{this.name} script`;
+  }
 }

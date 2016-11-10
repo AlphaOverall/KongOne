@@ -19,7 +19,8 @@
     let optionsScript = new ShowScriptOptions();
     let scripts = [
         optionsScript,
-        new WhisperCatch()
+        new WhisperCatch(),
+        new ChatTimestamp()
     ];
 
     optionsScript.scripts = scripts;

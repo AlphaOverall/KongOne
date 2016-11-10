@@ -28,7 +28,6 @@
 
     scripts.each((script) => script.initialize());
 
-    // useScript("Chat PM Notifier", "games", init_PMNotifier, true, true);
     // useScript("Chat Line Highlighting", "games", init_chatLineHighlighting, true, true);
     // useScript("Chat Reply-command", "games", init_replyCommand, true, true);
     // //useScript("Chat Reply-command (hotkey)", "games", init_replyHotkey, true, true);

@@ -31,11 +31,12 @@ gulp.task('build', ['clean', 'lint'], function () {
 gulp.task('es6', ['build'], function () {
   return gulp.src('bin/kongOne.user.js')
     .pipe(es6tr({
-      environments: ['browser', 'prototypejs'],
+      environments: ['browser', 'devel', 'prototypejs'],
       globals: {
         unsafeWindow: false,
-        GM_getValue: false,
-        GM_setValue: false,
+        GM_getValue: true,
+        GM_setValue: true,
+        GM_deleteValue: true,
         holodeck: false
       }
     }))

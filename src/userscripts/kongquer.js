@@ -2,7 +2,7 @@
 
 class Kongquer extends HolodeckScript {
   constructor() {
-    super('Kongquer', 'games', true);
+    super('Kongquer', /^games/, true);
   }
 
   run() {
@@ -50,7 +50,6 @@ class Kongquer extends HolodeckScript {
             }
             var games = dom.$H();
             userList.each(function(user){
-                console.log(user);
                 var o = user._game_url;
                 if(!games.get(o)){
                     games.set(o, {
@@ -166,8 +165,6 @@ class Kongquer extends HolodeckScript {
             levelCount = [];
             if (z[1].includes("-")){
                 var inbetween = z[1].split("-");
-                console.log(inbetween[0]);
-                console.log(inbetween[1]);
                 if (inbetween[0] < inbetween[1]){
                     for (a=inbetween[0]; a <= inbetween[1]; a++){
                         levelCount.push(a);
@@ -184,7 +181,6 @@ class Kongquer extends HolodeckScript {
                 levelCount = z[1].split(" ");
                 displaymessage = levelCount.join(", ");
             }
-            console.log(levelCount);
             var count = 0;
             for (var b=0; b <= levelCount.length; b++){
                 for(var i=0; i < allUsers.length; i++){
@@ -240,13 +236,6 @@ class Kongquer extends HolodeckScript {
             var div = document.createElement("div");
             div.innerHTML = amount;
             var a = div.getElementsByTagName("li");
-            for (var j = 0, len = a.length; j < len; j++){
-                if (a[j].textContent.includes("fans"))
-                {
-                    console.log(a[j]);
-                }
-                else { console.log(a[j] + "hahah");}
-            }
         }
         l.activeDialogue().displayUnsanitizedMessage("Highest Fans in Room", content, {"class":"whisper received_whisper"}, {non_user: true});
         return false;
@@ -573,7 +562,6 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
         else {
             l.activeDialogue().displayUnsanitizedMessage("Kong Bot", "Please use command like " + n + " 4+3-8*9/3^.5", {"class":"whisper received_whisper"}, {non_user: true});
         }
-        console.log(output);
         return false;
     });
     holodeck.addChatCommand("youtube", function(l,n){
@@ -656,7 +644,6 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
             gametd.parentNode.removeChild(gametd);
             var width = document.getElementById("chat_container").offsetWidth;
             width = (width > 550 ? width + 5 : 570) + "px";
-            console.log("Resizing containers to " + width);
             document.getElementById("flashframecontent").style.width = width;
             document.getElementById("maingamecontent").style.width = width;
             var maingame = document.getElementById("maingame");

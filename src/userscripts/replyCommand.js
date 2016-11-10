@@ -2,7 +2,7 @@
 
 class ReplyCommand extends HolodeckScript {
     constructor() {
-        super('Chat Reply-command', 'games', true);
+        super('Chat Reply-command', /^games/, true);
     }
 
     run() {

@@ -9,7 +9,7 @@ class Script {
 
   checkPath() {
     let documentPath = document.location.pathname;
-    return documentPath.match(this.path);
+    return this.path.test(documentPath);
   }
 
   initialize() {

@@ -3,14 +3,14 @@
 class ChatTimestamp extends HolodeckScript {
 
     constructor() {
-        super('Chat Timestamp', 'games', true);
+        super('Chat Timestamp', /^games/, true);
     }
 
     run() {
         var dom = this.dom,
             holodeck = dom.holodeck,
             ChatDialogue = dom.ChatDialogue;
-            
+
         if (holodeck && ChatDialogue) {
             ChatDialogue.prototype = dom.CDprototype || dom.ChatDialogue.prototype;
 

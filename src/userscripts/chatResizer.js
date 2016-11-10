@@ -2,7 +2,7 @@
 
 class ChatResizer extends HolodeckScript {
     constructor() {
-        super('Chat Resizer', 'games', true);
+        super('Chat Resizer', /^games/, true);
     }
 
     run() {
@@ -134,7 +134,6 @@ class ChatResizer extends HolodeckScript {
                     var chatcontainer = document.getElementById("chat_window");
                     chatcontainer.style.width = chatwindow.style.width;
                     chatcontainer.style.height = chatwindow.style.height;
-                    console.log(chatwindow.style.width);
                     l.activeDialogue().kongBotMessage("Chat window is now resizeable");
                 };
                 return false;

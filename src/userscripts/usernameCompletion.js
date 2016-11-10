@@ -2,7 +2,7 @@
 
 class UsernameCompletion extends HolodeckScript {
     constructor() {
-        super('Chat Username-completion');
+        super('Chat Username-completion', /^games/, true);
     }
 
     run() {

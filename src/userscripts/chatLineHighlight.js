@@ -2,7 +2,7 @@
 
 class ChatLineHighlight extends HolodeckScript {
     constructor() {
-        super('Chat Line Highlight', 'games', true);
+        super('Chat Line Highlight', /^games/, true);
     }
 
     run() {

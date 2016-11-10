@@ -2,7 +2,7 @@
 
 class ChatCharacterLimit extends HolodeckScript {
   constructor() {
-    super('Chat Character-limit', 'games', true);
+    super('Chat Character-limit', /^games/, true);
   }
 
   run() {

@@ -1,7 +1,7 @@
 //=require userscripts/*.js
 
 (function main() {
-    console.log("KongOne Script running.");
+    console.log("[KongOne] Initializing...");
 
     if (typeof GM_setValue === 'undefined') {
         window.GM_setValue = function(a, b) {

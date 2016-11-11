@@ -6,7 +6,7 @@ class LargerAvatars extends Script {
         super('Larger Forum Avatars', /^\/(posts|messages|private_messages)/, true);
     }
 
-    run() {;
+    run() {
         var aStyle = document.createElement("style");
         aStyle.innerHTML = ".post .user_avatar, .messages_table .user_avatar {width: 80px; height: 80px;} .sender_info {width: auto !important;}"; //Change px values for different sizes
         var head = document.getElementsByTagName("head")[0];

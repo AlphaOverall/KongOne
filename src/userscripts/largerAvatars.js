@@ -1,9 +1,9 @@
-//=require ../holodeckScript.js
+//=require ../script.js
 
 class LargerAvatars extends Script {
 
     constructor() {
-        super('Larger Forum Avatars', /^\//, true);
+        super('Larger Forum Avatars', /^\/(posts|messages|private_messages)/, true);
     }
 
     run() {;

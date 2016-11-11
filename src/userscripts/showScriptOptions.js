@@ -2,7 +2,7 @@
 
 class ShowScriptOptions extends Script {
     constructor() {
-        super('this', /^\/accounts/, true);
+        super('this', /^\//, true);
         this.scripts = [];
     }
 

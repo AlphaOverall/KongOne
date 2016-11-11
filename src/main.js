@@ -30,7 +30,8 @@
         new KongreLink(),
         new ChatResizer(),
         new Kongquer(),
-        new WhisperCatch()
+        new WhisperCatch(),
+		new LargerAvatars()
     ];
 
     optionsScript.scripts = scripts;

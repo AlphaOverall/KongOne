@@ -2,7 +2,7 @@
 
 class Kongquer extends HolodeckScript {
   constructor() {
-    super('Kongquer', /^games/, true);
+    super('Kongquer', /^\/games/, true);
   }
 
   run() {

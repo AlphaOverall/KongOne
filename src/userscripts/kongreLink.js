@@ -2,7 +2,7 @@
 
 class KongreLink extends HolodeckScript {
   constructor() {
-    super('Chat KongreLink', /^games/, true);
+    super('Chat KongreLink', /^\/games/, true);
   }
 
   run() {

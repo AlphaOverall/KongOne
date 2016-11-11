@@ -2,7 +2,7 @@
 
 class AfkCommand extends HolodeckScript {
     constructor() {
-        super('Chat Afk Command', /^games/, true);
+        super('Chat Afk Command', /^\/games/, true);
     }
 
     run() {

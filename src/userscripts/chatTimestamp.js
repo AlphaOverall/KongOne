@@ -3,7 +3,7 @@
 class ChatTimestamp extends HolodeckScript {
 
     constructor() {
-        super('Chat Timestamp', /^games/, true);
+        super('Chat Timestamp', /^\/games/, true);
     }
 
     run() {

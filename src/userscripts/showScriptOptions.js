@@ -2,7 +2,7 @@
 
 class ShowScriptOptions extends Script {
     constructor() {
-        super('this', /^accounts/, true);
+        super('this', /^\/accounts/, true);
         this.scripts = [];
     }
 
@@ -13,7 +13,7 @@ class ShowScriptOptions extends Script {
         }).update("<h2>Scripts</h2>Enable - Script Name<p></p>");
         $("profile_aside").down().insert(div);
 
-        this.scripts.each(function(item) {
+        this.scripts.map(function(item) {
             if (item.name == "this")
                 return true; //aka, continue for each loops
 

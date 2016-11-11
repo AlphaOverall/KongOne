@@ -3,7 +3,7 @@
 class ChatMouseoverTimestamp extends HolodeckScript {
 
     constructor() {
-        super('Chat Mouseover Timestamp', /^games/, false);
+        super('Chat Mouseover Timestamp', /^\/games/, false);
     }
 
     run() {

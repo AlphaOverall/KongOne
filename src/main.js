@@ -35,5 +35,5 @@
 
     optionsScript.scripts = scripts;
 
-    scripts.each((script) => script.initialize());
+    scripts.map((script) => script.initialize());
 })();

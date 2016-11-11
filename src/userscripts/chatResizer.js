@@ -2,7 +2,7 @@
 
 class ChatResizer extends HolodeckScript {
     constructor() {
-        super('Chat Resizer', /^games/, true);
+        super('Chat Resizer', /^\/games/, true);
     }
 
     run() {

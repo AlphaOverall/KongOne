@@ -9,6 +9,7 @@ class WhisperCatch extends HolodeckScript {
     run() {
         let dom = this.dom;
         let CDialogue = dom.ChatDialogue;
+        let removeWhisper = (w) => { this.removeWhisper(w); };
 
         holodeck.__wc_whisperCount = 0;
         CDialogue.prototype.__wc_receivedPrivateMessage = CDialogue.prototype.receivedPrivateMessage;
@@ -20,7 +21,7 @@ class WhisperCatch extends HolodeckScript {
             let whispers = JSON.parse(localStorage.getItem(WhisperCatch.WHISPERS_SAVED_KEY)) || [];
             whispers.push(a);
             localStorage.setItem(WhisperCatch.WHISPERS_SAVED_KEY, JSON.stringify(whispers));
-            setTimeout(this.removeWhisper, WhisperCatch.WHISPER_WAIT_TIME, a);
+            setTimeout(removeWhisper, WhisperCatch.WHISPER_WAIT_TIME, a);
         };
 
         this.__wc_interval = setInterval(() => { this.restoreWhispers(); }, WhisperCatch.CHAT_DIALOGUE_RETRY);

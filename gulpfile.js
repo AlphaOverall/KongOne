@@ -49,5 +49,4 @@ gulp.task('watch', function() {
   gulp.watch('src/userscripts/*.js', ['build']);
 });
 
-
-gulp.task('default', ['clean', 'lint', 'build', 'es6','uglify', 'userscript']);
+gulp.task('default', ['clean', 'lint', 'build', 'es6', 'uglify', 'userscript']);

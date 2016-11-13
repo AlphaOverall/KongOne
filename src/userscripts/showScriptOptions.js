@@ -21,7 +21,7 @@ class ShowScriptOptions extends Script {
             div.insert(span);
             
             var checkbox = new Element("input", {"type":"checkbox", "id":"onescript-" + item.name, "style":"margin-top:2px;vertical-align:top;margin-right:8px;"});
-            var label = new Element("label", {"class":"pls"})
+            var label = new Element("label", {"class":"pls"});
             checkbox.checked = GM_getValue(checkbox.id,item.defaultEnabled?"true":"false") == "true";                              
             label.insert(checkbox);
             label.insert(item.name);

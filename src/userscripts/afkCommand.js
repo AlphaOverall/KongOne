@@ -7,6 +7,7 @@ class AfkCommand extends HolodeckScript {
 
     run() {
         var AUTOAFK = "kongregate_autoAFKTimeout";
+        var AUTOAFK_MSG = "kongregate_autoAFKMessage";
 
         var dom = this.dom,
             holodeck = dom.holodeck,
@@ -71,12 +72,14 @@ class AfkCommand extends HolodeckScript {
                 };
 
                 holodeck.addChatCommand("afkmessage", function(l, n) {
+                    let a;
                     var z = n.match(/^\/\S+\s+(.+)/);
                     if (z) {
                         a = z[1];
                     } else {
                         a = "I am currently AFK";
                     }
+                    GM_setValue(AUTOAFK_MSG, a);
                     l._afkmessage = a;
                     l.activeDialogue().kongBotMessage("AFK-message set to: " + a);
                     return false;
@@ -175,20 +178,20 @@ class AfkCommand extends HolodeckScript {
                 }
 
                 CDialogue.prototype.receivedPrivateMessage = function(a) {
+                    this.showReceivedPM(a);
                     if (a.data.success) {
                         this.reply(a.data.from);
                         if (this._holodeck._afk && Base64.decode(a.data.message).indexOf(this._holodeck._afkprefix) !== 0) {
                             this.sendPrivateMessage(a.data.from, this._holodeck._afkprefix + this._holodeck._afkmessage);
                         }
                     }
-                    this.showReceivedPM(a);
                 };
 
                 holodeck._afk = 0;
 
                 holodeck._afktoggle = 0;
 
-                holodeck._afkmessage = "I am currently AFK";
+                holodeck._afkmessage = GM_getValue(AUTOAFK_MSG, "I am currently AFK");
 
                 holodeck._afkprefix = "[AFK] ";
 

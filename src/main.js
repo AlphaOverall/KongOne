@@ -31,7 +31,7 @@
         new ChatResizer(),
         new Kongquer(),
         new WhisperCatch(),
-		new LargerAvatars()
+		    new LargerAvatars()
     ];
 
     optionsScript.scripts = scripts;

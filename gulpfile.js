@@ -45,8 +45,15 @@ gulp.task('userscript', ['uglify'], function () {
     .pipe(gulp.dest('bin'))
 });
 
+gulp.task('userscript-dev', ['build'], function () {
+  return gulp.src(['src/userscriptDefinition.js', 'bin/kongOne.user.js'])
+    .pipe(concat('kongOne.user.js'))
+    .pipe(gulp.dest('bin'))
+});
+
 gulp.task('watch', function() {
   gulp.watch('src/userscripts/*.js', ['build']);
 });
 
 gulp.task('default', ['clean', 'lint', 'build', 'es6', 'uglify', 'userscript']);
+gulp.task('dev', ['clean', 'lint', 'build', 'userscript-dev']);

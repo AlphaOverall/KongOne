@@ -31,7 +31,8 @@
         new ChatResizer(),
         new Kongquer(),
         new WhisperCatch(),
-		    new LargerAvatars()
+        new LargerAvatars(),
+        new PostCount()
     ];
 
     optionsScript.scripts = scripts;

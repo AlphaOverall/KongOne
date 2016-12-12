@@ -7,6 +7,10 @@ class HolodeckScript extends Script {
   }
 
   initialize() {
+    // Don't load script if incorrect path
+    if (!this.checkPath()) return;
+
+    // Load script
     this.holodeckCheckCounter++;
 
     if (typeof holodeck !== 'undefined' && holodeck.ready) {

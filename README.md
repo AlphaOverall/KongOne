@@ -63,7 +63,9 @@ Here are its basic functions:
 
 **/afktoggle** toggles whether to send an automatic message to whispers when your status is away
 
-**/afkmessage message** sets message to show to users when afktoggle is on. If no message is specified, an automatic message is given.
+**/afkmessage** displays the saved AFK-message
+
+**/afkmessage message** sets message to show to users when afktoggle is on
 
 ##Chat Resizer
 

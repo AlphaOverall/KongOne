@@ -3,7 +3,7 @@
 class LargerAvatars extends Script {
 
     constructor() {
-        super('Larger Forum Avatars', /^\/(posts|messages|private_messages)/, true);
+        super('Larger Forum Avatars', /\/(topics|posts|messages|private_messages)/, true);
     }
 
     run() {
@@ -18,6 +18,7 @@ class LargerAvatars extends Script {
             aImgs[i].innerHTML = aImgs[i].innerHTML.replace("width:40", "width:140");
         }
 
-        GM_addStyle(".post .author {width: 260px; #feature {width: 952px;}}");
+        // This and its grant tag mess things up... :/
+        // GM_addStyle(".post .author {width: 260px; #feature {width: 952px;}}");
     }
 }

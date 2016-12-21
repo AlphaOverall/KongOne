@@ -76,12 +76,12 @@ class AfkCommand extends HolodeckScript {
                     var z = n.match(/^\/\S+\s+(.+)/);
                     if (z) {
                         a = z[1];
+                        GM_setValue(AUTOAFK_MSG, a);
+                        l._afkmessage = a;
+                        l.activeDialogue().kongBotMessage("AFK-message set to: " + a);
                     } else {
-                        a = "I am currently AFK";
+                        l.activeDialogue().kongBotMessage("Current AFK-message: " + l._afkmessage);
                     }
-                    GM_setValue(AUTOAFK_MSG, a);
-                    l._afkmessage = a;
-                    l.activeDialogue().kongBotMessage("AFK-message set to: " + a);
                     return false;
                 });
 

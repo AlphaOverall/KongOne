@@ -23,11 +23,11 @@ class PmNotifier extends HolodeckScript {
                 dom._chime.load();
 
                 //dom.document.addEventListener("blur", function() {
-                window.onblur = function() {
+                dom.window.onblur = function() {
                     dom._blurred = true;
                 }; //, false);
                 //dom.document.addEventListener("focus", function() {
-                window.onfocus = function() {
+                dom.window.onfocus = function() {
                     dom._blurred = false;
                     dom.pmReset();
                 }; //, false);

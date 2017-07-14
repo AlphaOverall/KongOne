@@ -35,7 +35,7 @@ gulp.task('es6', ['build'], function () {
 
 gulp.task('uglify', ['build', 'es6'], function () {
   return gulp.src('bin/kongOne.user.js')
-    .pipe(uglify().on('error', gutil.log))
+    //.pipe(uglify().on('error', gutil.log))
     .pipe(gulp.dest('bin'));
 });
 

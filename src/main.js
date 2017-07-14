@@ -32,7 +32,8 @@
         new Kongquer(),
         new WhisperCatch(),
         new LargerAvatars(),
-        new PostCount()
+        new PostCount(),
+        new LevelExtension()
     ];
 
     optionsScript.scripts = scripts;

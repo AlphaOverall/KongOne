@@ -32,7 +32,8 @@
         new Kongquer(),
         new WhisperCatch(),
         new LargerAvatars(),
-        new PostCount()
+        new PostCount(),
+        new SpamIstTot()
     ];
 
     optionsScript.scripts = scripts;

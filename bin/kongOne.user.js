@@ -2,7 +2,7 @@
 // @name             Kongregate One Developer
 // @namespace        profusiongames.com
 // @author           UnknownGuardian, AlphaOverall, Ruudiluca, Resterman
-// @version          2.0.0
+// @version          2.0.1
 // @date             04/19/2013
 // @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
@@ -2525,8 +2525,84 @@ var ShowScriptOptions = function (_Script4) {
 
 //=require ../holodeckScript.js
 
-var UsernameCompletion = function (_HolodeckScript11) {
-    _inherits(UsernameCompletion, _HolodeckScript11);
+var SpamIstTot = function (_HolodeckScript11) {
+    _inherits(SpamIstTot, _HolodeckScript11);
+
+    function SpamIstTot() {
+        _classCallCheck(this, SpamIstTot);
+
+        return _possibleConstructorReturn(this, (SpamIstTot.__proto__ || Object.getPrototypeOf(SpamIstTot)).call(this, 'Spam Ist Tot', /^\/games/, true));
+    }
+
+    _createClass(SpamIstTot, [{
+        key: "run",
+        value: function run() {
+            ChatDialogue.prototype.incrementMessageCount = function (a) {
+                var hasCount = a.getElementsByClassName('spam-count').length > 0;
+
+                if (hasCount) {
+                    var count = a.getElementsByClassName('spam-count')[0],
+                        amount = parseInt(count.getAttribute('amount'));
+                    count.innerHTML = 'x' + (amount + 1);
+                    count.setAttribute('amount', amount + 1);
+                } else {
+                    a.getElementsByTagName('p')[0].innerHTML += '<span amount="2" class="spam-count" style="float: right; color: #888">x2</span>';
+                }
+            };
+
+            ChatDialogue.prototype.compareMessages = function (a, b) {
+                if (!a || !b) return false;
+
+                var c = a.getElementsByClassName('username')[0].getAttribute('username'),
+                    d = b.getElementsByClassName('username')[0].getAttribute('username'),
+                    e = a.getElementsByClassName('message')[0].innerHTML,
+                    f = b.getElementsByClassName('message')[0].innerHTML;
+
+                return c == d && e == f;
+            };
+
+            ChatDialogue.prototype.insert = function (a, b, c) {
+                var d = this,
+                    e = this._message_window_node,
+                    f = this._holodeck;
+                f.scheduleRender(function () {
+                    var g = e.getHeight(),
+                        h = g + e.scrollTop + ChatDialogue.SCROLL_FUDGE >= e.scrollHeight,
+                        r = 0 !== g && h;
+                    f.scheduleRender(function () {
+                        var messages = e.getElementsByClassName('chat-message');
+                        var lastMsg = messages.length ? messages[messages.length - 1] : null;
+
+                        if ("string" == typeof a || a instanceof String) a = $j("<div/>", {
+                            html: a,
+                            "class": "chat-message"
+                        });
+
+                        if (d.compareMessages(lastMsg, a[0])) {
+                            d.incrementMessageCount(lastMsg);
+                            return;
+                        }
+
+                        if (c && c.timestamp) {
+                            var f = $j(e).children(".chat-message").filter(function () {
+                                return $j(this).data("timestamp") > c.timestamp;
+                            });
+                            0 < f.length ? ($j(a).data(c).insertBefore(f.first()), r = !1) : $j(a).data(c).appendTo(e);
+                        } else $j(a).appendTo(e);
+                        r && d.scrollToBottom();
+                        b && b();
+                    });
+                });
+            };
+        }
+    }]);
+
+    return SpamIstTot;
+}(HolodeckScript);
+//=require ../holodeckScript.js
+
+var UsernameCompletion = function (_HolodeckScript12) {
+    _inherits(UsernameCompletion, _HolodeckScript12);
 
     function UsernameCompletion() {
         _classCallCheck(this, UsernameCompletion);
@@ -2608,8 +2684,8 @@ var UsernameCompletion = function (_HolodeckScript11) {
 
 //=require ../holodeckScript.js
 
-var WhisperCatch = function (_HolodeckScript12) {
-    _inherits(WhisperCatch, _HolodeckScript12);
+var WhisperCatch = function (_HolodeckScript13) {
+    _inherits(WhisperCatch, _HolodeckScript13);
 
     function WhisperCatch() {
         _classCallCheck(this, WhisperCatch);
@@ -2620,12 +2696,12 @@ var WhisperCatch = function (_HolodeckScript12) {
     _createClass(WhisperCatch, [{
         key: "run",
         value: function run() {
-            var _this19 = this;
+            var _this20 = this;
 
             var dom = this.dom;
             var CDialogue = dom.ChatDialogue;
             var removeWhisper = function removeWhisper(w) {
-                _this19.removeWhisper(w);
+                _this20.removeWhisper(w);
             };
 
             holodeck.__wc_whisperCount = 0;
@@ -2642,7 +2718,7 @@ var WhisperCatch = function (_HolodeckScript12) {
             };
 
             this.__wc_interval = setInterval(function () {
-                _this19.restoreWhispers();
+                _this20.restoreWhispers();
             }, WhisperCatch.CHAT_DIALOGUE_RETRY);
 
             holodeck.addChatCommand('wctime', function (holodeck, str) {
@@ -2712,7 +2788,7 @@ WhisperCatch.CHAT_DIALOGUE_RETRY = 100;
     }
 
     var optionsScript = new ShowScriptOptions();
-    var scripts = [optionsScript, new ChatTimestamp(), new PmNotifier(), new ChatLineHighlight(), new ReplyCommand(), new UsernameCompletion(), new ChatMouseoverTimestamp(), new AfkCommand(), new ChatCharacterLimit(), new KongreLink(), new ChatResizer(), new Kongquer(), new WhisperCatch(), new LargerAvatars(), new PostCount()];
+    var scripts = [optionsScript, new ChatTimestamp(), new PmNotifier(), new ChatLineHighlight(), new ReplyCommand(), new UsernameCompletion(), new ChatMouseoverTimestamp(), new AfkCommand(), new ChatCharacterLimit(), new KongreLink(), new ChatResizer(), new Kongquer(), new WhisperCatch(), new LargerAvatars(), new PostCount(), new SpamIstTot()];
 
     optionsScript.scripts = scripts;
 

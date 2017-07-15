@@ -33,11 +33,8 @@
         new WhisperCatch(),
         new LargerAvatars(),
         new PostCount(),
-<<<<<<< HEAD
-        new LevelExtension()
-=======
+        new LevelExtension(),
         new SpamIstTot()
->>>>>>> development
     ];
 
     optionsScript.scripts = scripts;

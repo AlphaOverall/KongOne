@@ -83,7 +83,7 @@ class LevelExtension extends Script {
                         if (points < le.UserStorage.levelPoints[le.UserStorage.REAL_MAX_LVL])
                             return Promise.reject('No need to update.');
 
-                        return user.getLevel();
+                        return user.getLevel(le);
                     })
                     .then(function (level) {
                         // Update level number
@@ -216,15 +216,15 @@ class LevelExtension extends Script {
                 return promise;
             },
 
-            getLevel: function () {
+            getLevel: function (le) {
                 var user = this;
 
                 if (user.level === null) {
                     var promise = user.getPoints()
                         .then(function (points) {
-                            var level = this.UserStorage.REAL_MAX_LVL;
-                            while (level <= this.UserStorage.FAKE_MAX_LVL &&
-                                points >= this.UserStorage.levelPoints[level])
+                            var level = le.UserStorage.REAL_MAX_LVL;
+                            while (level <= le.UserStorage.FAKE_MAX_LVL &&
+                                points >= le.UserStorage.levelPoints[level])
                                 level++;
 
                             return (user.level = level - 1);
@@ -323,11 +323,10 @@ class LevelExtension extends Script {
         window.addEventListener('load', () => {
             this.createLevelbugCSS();
             this.getFakeMaxLevel();
-            var le = this;
-            this.UpdateActions.forEach(function (uAction, i, arr) {
+            this.UpdateActions.forEach((uAction, i, arr) => {
                 if (uAction.pattern.test(document.URL))
-                    uAction.actions.forEach(function (f, i, arr) {
-                        f(le);
+                    uAction.actions.forEach((f, i, arr) => {
+                        f(this);
                     });
             });
         });

@@ -2,7 +2,7 @@
 
 class LevelExtension extends Script {
     constructor() {
-        super('Level Extension', /^\/accounts/, true);
+        super('Level Extension',  /^\//, true);
 
         this.UserStorage = {
             levelPoints: [],

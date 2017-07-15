@@ -2220,7 +2220,7 @@ var LevelExtension = function (_Script3) {
     function LevelExtension() {
         _classCallCheck(this, LevelExtension);
 
-        var _this13 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\/accounts/, true));
+        var _this13 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true));
 
         _this13.UserStorage = {
             levelPoints: [],

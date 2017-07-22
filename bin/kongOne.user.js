@@ -2146,7 +2146,7 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
             holodeck._chat_commands.close = holodeck._chat_commands.exit;
             holodeck._chat_commands.roominfo = holodeck._chat_commands.info;
             holodeck._chat_commands.friendsonline = holodeck._chat_commands.online;
-            holodeck._chat_commands.u = holodeck._chat_commands.me = holodeck._chat_commands.user;
+            holodeck._chat_commands.u = holodeck._chat_commands.user;
             holodeck._chat_commands.admins = holodeck._chat_commands.administrator = holodeck._chat_commands.administrators = holodeck._chat_commands.admin;
             holodeck._chat_commands.dev = holodeck._chat_commands.devs = holodeck._chat_commands.developers = holodeck._chat_commands.developer;
             holodeck._chat_commands.mod = holodeck._chat_commands.mods = holodeck._chat_commands.moderators = holodeck._chat_commands.moderator;
@@ -2456,7 +2456,7 @@ var LevelExtension = function (_Script3) {
                 var user = this;
 
                 if (user.points === null) {
-                    var promise = this.HttpGetPromise(this.UserStorage.USER_INFO + user.username).then(function (json) {
+                    var promise = lethis.HttpGetPromise(lethis.UserStorage.USER_INFO + user.username).then(function (json) {
                         return JSON.parse(json).user_vars.points;
                     }).then(function (points) {
                         return user.points = points;

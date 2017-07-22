@@ -2222,6 +2222,7 @@ var LevelExtension = function (_Script3) {
 
         var _this13 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true));
 
+        var lethis = _this13;
         _this13.UserStorage = {
             levelPoints: [],
             REAL_MAX_LVL: 75,
@@ -2262,7 +2263,7 @@ var LevelExtension = function (_Script3) {
                 le.createCapChanger();
 
                 var ks = new le.KongScript();
-                ks.waitFor('active_user', null, 50).then(function (active_user) {
+                ks.waitFor('active_user', le, null, 50).then(function (active_user) {
                     var user = new le.LevelCapUser(active_user.username());
                     user.points = active_user.points();
                     user.getLevel().then(function (level) {
@@ -2282,10 +2283,10 @@ var LevelExtension = function (_Script3) {
 
             CHAT: function CHAT(le) {
                 var ks = new le.KongScript();
-                ks.waitFor('ChatRoom').then(function (cr) {
-                    ks.waitFor('MiniProfile');
+                ks.waitFor('ChatRoom', le).then(function (cr) {
+                    ks.waitFor('MiniProfile', le);
                 }).then(function (mp) {
-                    ks.waitFor('holodeck');
+                    ks.waitFor('holodeck', le);
                 }).then(function (h) {
                     le.injectChatRoomCode();
                     le.injectMiniProfileCode();
@@ -2316,7 +2317,7 @@ var LevelExtension = function (_Script3) {
             HOVER_BOX: function HOVER_BOX(le) {
                 var ks = new le.KongScript();
 
-                ks.waitFor('UserProfileHoverbox').then(function (u) {
+                ks.waitFor('UserProfileHoverbox', le).then(function (u) {
                     le.injectUserProfileHoverbox();
                 });
             }
@@ -2351,8 +2352,8 @@ var LevelExtension = function (_Script3) {
              *	@return a promise that is fulfilled whenever the class is defined
              *		and is rejected when the timeout is reached.
              */
-            waitFor: function waitFor(className, timeout, interval) {
-                if (!className) return Promise.reject('Class name must be specified.');
+            waitFor: function waitFor(className, ctx, timeout, interval) {
+                if (!className || !ctx) return Promise.reject('Class name must be specified with context.');
 
                 timeout = timeout !== undefined ? timeout : this.CHECK_TIMEOUT;
                 interval = interval !== undefined ? interval : this.CHECK_INTERVAL;
@@ -2360,10 +2361,10 @@ var LevelExtension = function (_Script3) {
                 return new Promise(function (resolve, reject) {
                     var checkTimes = timeout * 1000 / interval;
                     var timeInterval = setInterval(function () {
-                        if (window[className]) {
+                        if (ctx.dom.window[className]) {
                             console.log(className + ' loaded.');
 
-                            resolve(window[className]);
+                            resolve(ctx.dom.window[className]);
                             clearInterval(timeInterval);
                         } else if (checkTimes-- <= 0) {
                             console.log('Timeout.');
@@ -2478,8 +2479,9 @@ var LevelExtension = function (_Script3) {
 
                 if (user.level === null) {
                     var promise = user.getPoints().then(function (points) {
-                        var level = this.UserStorage.REAL_MAX_LVL;
-                        while (level <= this.UserStorage.FAKE_MAX_LVL && points >= this.UserStorage.levelPoints[level]) {
+                        console.log(lethis.UserStorage, user.level);
+                        var level = lethis.UserStorage.REAL_MAX_LVL;
+                        while (level <= lethis.UserStorage.FAKE_MAX_LVL && points >= lethis.UserStorage.levelPoints[level]) {
                             level++;
                         }return user.level = level - 1;
                     });
@@ -2496,7 +2498,6 @@ var LevelExtension = function (_Script3) {
             this.users = {};
         };
         _this13.ChatUserStorage.prototype = {
-
             /**
              *	Return the level of the user.
              *
@@ -2504,8 +2505,8 @@ var LevelExtension = function (_Script3) {
              */
             getLevel: function getLevel(username) {
                 username = username.toLowerCase();
-
-                if (this.users[username] === undefined) this.users[username] = new this.LevelCapUser(username);
+                console.log(lethis.LevelCapUser);
+                if (this.users[username] === undefined) this.users[username] = new lethis.LevelCapUser(username);
 
                 return this.users[username].getLevel();
             }
@@ -2644,12 +2645,14 @@ var LevelExtension = function (_Script3) {
         key: "injectChatRoomCode",
         value: function injectChatRoomCode() {
             ChatRoom.prototype._updateUser = ChatRoom.prototype.updateUser;
+            var lethis = this;
             ChatRoom.prototype.updateUser = function (a, b) {
-                holodeck.uStorage = holodeck.uStorage || new this.ChatUserStorage();
+                console.log("We need to update holodeck!!!", this);
+                holodeck.uStorage = holodeck.uStorage || new lethis.ChatUserStorage();
 
                 var u = a.variables,
                     chatRoom = this;
-                if (u.level == this.UserStorage.REAL_MAX_LVL) {
+                if (u.level == lethis.UserStorage.REAL_MAX_LVL) {
                     holodeck.uStorage.getLevel(u.username).then(function (level) {
                         u.level = level;
                         chatRoom._updateUser(a, b);
@@ -2662,6 +2665,7 @@ var LevelExtension = function (_Script3) {
     }, {
         key: "injectMiniProfileCode",
         value: function injectMiniProfileCode() {
+            var lethis = this;
             MiniProfile.prototype.activate = function (a, b) {
                 this._chat_window.setActiveTempPane(this);
                 this._current_username = a;
@@ -2681,11 +2685,12 @@ var LevelExtension = function (_Script3) {
                     method: "get",
                     onComplete: function onComplete() {
                         // Change only if the user is level 65
+                        console.log(holodeck.uStorage, holodeck, lethis, this);
                         holodeck.uStorage.getLevel(a).then(function (level) {
                             var miniProfile = document.getElementById('user_mini_profile');
                             var levelRegExp = /level_([0-9]*)/i;
 
-                            if (level >= this.UserStorage.REAL_MAX_LVL) miniProfile.innerHTML = miniProfile.innerHTML.replace(levelRegExp, 'level_' + level);
+                            if (level >= lethis.UserStorage.REAL_MAX_LVL) miniProfile.innerHTML = miniProfile.innerHTML.replace(levelRegExp, 'level_' + level);
 
                             !1 === d._chat_tab_clicked && (d.hideSpinner(), e.setupBanAndSilencingControls(a), active_user.addCapturedSelector("#add_friend"), active_user.addCapturedSelector("#mute_user"));
                         });
@@ -2766,6 +2771,8 @@ var LevelExtension = function (_Script3) {
     }, {
         key: "createCapChanger",
         value: function createCapChanger() {
+            var _this15 = this;
+
             var levelCapChanger = document.createElement('li');
 
             var levelCapStyle = document.createElement('style');
@@ -2777,7 +2784,7 @@ var LevelExtension = function (_Script3) {
             linkCapChanger.innerHTML = 'Level cap';
             linkCapChanger.href = '#';
             linkCapChanger.addEventListener('click', function () {
-                this.setFakeMaxLevel();
+                _this15.setFakeMaxLevel();
             });
             levelCapChanger.appendChild(linkCapChanger);
 
@@ -3045,10 +3052,10 @@ var ShowScriptOptions = function (_Script5) {
     function ShowScriptOptions() {
         _classCallCheck(this, ShowScriptOptions);
 
-        var _this18 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true));
+        var _this19 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true));
 
-        _this18.scripts = [];
-        return _this18;
+        _this19.scripts = [];
+        return _this19;
     }
 
     _createClass(ShowScriptOptions, [{
@@ -3285,12 +3292,12 @@ var WhisperCatch = function (_HolodeckScript13) {
     _createClass(WhisperCatch, [{
         key: "run",
         value: function run() {
-            var _this22 = this;
+            var _this23 = this;
 
             var dom = this.dom;
             var CDialogue = dom.ChatDialogue;
             var removeWhisper = function removeWhisper(w) {
-                _this22.removeWhisper(w);
+                _this23.removeWhisper(w);
             };
 
             holodeck.__wc_whisperCount = 0;
@@ -3307,7 +3314,7 @@ var WhisperCatch = function (_HolodeckScript13) {
             };
 
             this.__wc_interval = setInterval(function () {
-                _this22.restoreWhispers();
+                _this23.restoreWhispers();
             }, WhisperCatch.CHAT_DIALOGUE_RETRY);
 
             holodeck.addChatCommand('wctime', function (holodeck, str) {

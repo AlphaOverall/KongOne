@@ -4,6 +4,7 @@ class LevelExtension extends Script {
     constructor() {
         super('Level Extension',  /^\//, true);
 
+        var lethis = this;
         this.UserStorage = {
             levelPoints: [],
             REAL_MAX_LVL: 75,
@@ -44,7 +45,7 @@ class LevelExtension extends Script {
                 le.createCapChanger();
 
                 var ks = new le.KongScript();
-                ks.waitFor('active_user', null, 50).then(function (active_user) {
+                ks.waitFor('active_user', le, null, 50).then(function (active_user) {
                     var user = new le.LevelCapUser(active_user.username());
                     user.points = active_user.points();
                     user.getLevel().then(function (level) {
@@ -65,11 +66,11 @@ class LevelExtension extends Script {
 
             CHAT: function (le) {
                 var ks = new le.KongScript();
-                ks.waitFor('ChatRoom').then(function (cr) {
-                        ks.waitFor('MiniProfile');
+                ks.waitFor('ChatRoom', le).then(function (cr) {
+                        ks.waitFor('MiniProfile', le);
                     })
                     .then(function (mp) {
-                        ks.waitFor('holodeck');
+                        ks.waitFor('holodeck', le);
                     })
                     .then(function (h) {
                         le.injectChatRoomCode();
@@ -107,7 +108,7 @@ class LevelExtension extends Script {
             HOVER_BOX: function (le) {
                 var ks = new le.KongScript();
 
-                ks.waitFor('UserProfileHoverbox').then(function (u) {
+                ks.waitFor('UserProfileHoverbox', le).then(function (u) {
                     le.injectUserProfileHoverbox();
                 });
             }
@@ -145,9 +146,9 @@ class LevelExtension extends Script {
              *	@return a promise that is fulfilled whenever the class is defined
              *		and is rejected when the timeout is reached.
              */
-            waitFor: function (className, timeout, interval) {
-                if (!className)
-                    return Promise.reject('Class name must be specified.');
+            waitFor: function (className, ctx, timeout, interval) {
+                if (!className || !ctx)
+                    return Promise.reject('Class name must be specified with context.');
 
                 timeout = (timeout !== undefined ? timeout : this.CHECK_TIMEOUT);
                 interval = (interval !== undefined ? interval : this.CHECK_INTERVAL);
@@ -155,10 +156,10 @@ class LevelExtension extends Script {
                 return new Promise(function (resolve, reject) {
                     var checkTimes = timeout * 1000 / interval;
                     var timeInterval = setInterval(function () {
-                        if (window[className]) {
+                        if (ctx.dom.window[className]) {
                             console.log(className + ' loaded.');
 
-                            resolve(window[className]);
+                            resolve(ctx.dom.window[className]);
                             clearInterval(timeInterval);
                         } else if (checkTimes-- <= 0) {
                             console.log('Timeout.');
@@ -255,7 +256,7 @@ class LevelExtension extends Script {
                 var user = this;
 
                 if (user.points === null) {
-                    var promise = this.HttpGetPromise(this.UserStorage.USER_INFO + user.username)
+                    var promise = lethis.HttpGetPromise(lethis.UserStorage.USER_INFO + user.username)
                         .then(function (json) {
                             return JSON.parse(json).user_vars.points;
                         })
@@ -281,9 +282,10 @@ class LevelExtension extends Script {
                 if (user.level === null) {
                     var promise = user.getPoints()
                         .then(function (points) {
-                            var level = this.UserStorage.REAL_MAX_LVL;
-                            while (level <= this.UserStorage.FAKE_MAX_LVL &&
-                                points >= this.UserStorage.levelPoints[level])
+                            console.log(lethis.UserStorage, user.level);
+                            var level = lethis.UserStorage.REAL_MAX_LVL;
+                            while (level <= lethis.UserStorage.FAKE_MAX_LVL &&
+                                points >= lethis.UserStorage.levelPoints[level])
                                 level++;
 
                             return (user.level = level - 1);
@@ -301,7 +303,6 @@ class LevelExtension extends Script {
             this.users = {};
         };
         this.ChatUserStorage.prototype = {
-
             /**
              *	Return the level of the user.
              *
@@ -309,9 +310,9 @@ class LevelExtension extends Script {
              */
             getLevel: function (username) {
                 username = username.toLowerCase();
-
+                console.log(lethis.LevelCapUser);
                 if (this.users[username] === undefined)
-                    this.users[username] = new this.LevelCapUser(username);
+                    this.users[username] = new lethis.LevelCapUser(username);
 
                 return this.users[username].getLevel();
             }
@@ -443,12 +444,14 @@ class LevelExtension extends Script {
 
     injectChatRoomCode() {
         ChatRoom.prototype._updateUser = ChatRoom.prototype.updateUser;
-        ChatRoom.prototype.updateUser = function (a, b) {
-            holodeck.uStorage = holodeck.uStorage || new this.ChatUserStorage();
+        var lethis = this;
+        ChatRoom.prototype.updateUser = function(a, b) {
+            console.log("We need to update holodeck!!!", this);
+            holodeck.uStorage = holodeck.uStorage || new lethis.ChatUserStorage();
 
             var u = a.variables,
                 chatRoom = this;
-            if (u.level == this.UserStorage.REAL_MAX_LVL) {
+            if (u.level == lethis.UserStorage.REAL_MAX_LVL) {
                 holodeck.uStorage.getLevel(u.username)
                     .then(function (level) {
                         u.level = level;
@@ -461,6 +464,7 @@ class LevelExtension extends Script {
     }
 
     injectMiniProfileCode() {
+        var lethis = this;
         MiniProfile.prototype.activate = function (a, b) {
             this._chat_window.setActiveTempPane(this);
             this._current_username = a;
@@ -480,11 +484,12 @@ class LevelExtension extends Script {
                 method: "get",
                 onComplete: function () {
                     // Change only if the user is level 65
+                    console.log(holodeck.uStorage, holodeck, lethis, this);
                     holodeck.uStorage.getLevel(a).then(function (level) {
                         var miniProfile = document.getElementById('user_mini_profile');
                         var levelRegExp = /level_([0-9]*)/i;
 
-                        if (level >= this.UserStorage.REAL_MAX_LVL)
+                        if (level >= lethis.UserStorage.REAL_MAX_LVL)
                             miniProfile.innerHTML = miniProfile.innerHTML.replace(levelRegExp, 'level_' + level);
 
                         !1 === d._chat_tab_clicked && (d.hideSpinner(), e.setupBanAndSilencingControls(a), active_user.addCapturedSelector("#add_friend"), active_user.addCapturedSelector("#mute_user"));
@@ -571,7 +576,7 @@ class LevelExtension extends Script {
         linkCapChanger.id = 'level_cap_control';
         linkCapChanger.innerHTML = 'Level cap';
         linkCapChanger.href = '#';
-        linkCapChanger.addEventListener('click', function () {
+        linkCapChanger.addEventListener('click', () => {
             this.setFakeMaxLevel();
         });
         levelCapChanger.appendChild(linkCapChanger);

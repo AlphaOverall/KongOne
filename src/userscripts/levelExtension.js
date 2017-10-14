@@ -483,7 +483,7 @@ class LevelExtension extends Script {
             }, "/accounts/" + a + ".chat", {
                 method: "get",
                 onComplete: function () {
-                    // Change only if the user is level 65
+                    // Change only if the user is max lvl
                     console.log(holodeck.uStorage, holodeck, lethis, this);
                     holodeck.uStorage.getLevel(a).then(function (level) {
                         var miniProfile = document.getElementById('user_mini_profile');
@@ -523,7 +523,7 @@ class LevelExtension extends Script {
                         });
                     })
                     .catch(function (err) {
-                        // Open it anyways, but the level may be capped at 65
+                        // Open it anyways, but the level may be capped at max
                         hoverbox._openHoverbox();
                         console.log(err);
                     });
@@ -558,10 +558,10 @@ class LevelExtension extends Script {
         var level = window.prompt('Set the new level cap.', this.UserStorage.FAKE_MAX_LVL);
         level = parseInt(level);
 
-        if (level > 65 && level <= 100) {
+        if (level > 75 && level <= 100) {
             this.UserStorage.FAKE_MAX_LVL = level;
             localStorage.setItem('fake_max_level', level);
-        } else if (!isNaN(level)) alert('New level cap must be between 66 and 100');
+        } else if (!isNaN(level)) alert('New level cap must be between 76 and 100');
     }
 
     // Creates the button to change the level cap

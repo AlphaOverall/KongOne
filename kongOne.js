@@ -2,10 +2,9 @@
 // @name             Kongregate One
 // @namespace        profusiongames.com
 // @author           UnknownGuardian, AlphaOverall
-// @version          1.2.4
+// @version          1.2.5
 // @date             04/19/2013
-// @include          http://www.kongregate.com/games/*/*
-// @include          http://www.kongregate.com/accounts/*
+// @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
 // ==/UserScript==
 

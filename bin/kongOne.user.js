@@ -2227,7 +2227,7 @@ var LevelExtension = function (_Script3) {
             levelPoints: [],
             REAL_MAX_LVL: 75,
             FAKE_MAX_LVL: 100,
-            USER_INFO: 'http://www.kongregate.com/api/user_info.json?username='
+            USER_INFO: 'https://www.kongregate.com/api/user_info.json?username='
         };
 
         _this13.UserStorage.levelPoints[75] = 57885;
@@ -2314,6 +2314,21 @@ var LevelExtension = function (_Script3) {
                 });
             },
 
+            LEVELBUG: function LEVELBUG(le) {
+                Array.from(document.getElementsByClassName("levelbug")).forEach(function (levelbug) {
+                    var user = new le.LevelCapUser(levelbug.innerText);
+                    user.getPoints().then(function (points) {
+                        if (points < le.UserStorage.levelPoints[le.UserStorage.REAL_MAX_LVL]) return Promise.reject('No need to update.');
+
+                        return user.getLevel(le);
+                    }).then(function (level) {
+                        le.updateLevelbug(levelbug, level);
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+                });
+            },
+
             HOVER_BOX: function HOVER_BOX(le) {
                 var ks = new le.KongScript();
 
@@ -2326,7 +2341,7 @@ var LevelExtension = function (_Script3) {
 
         _this13.UpdateActions = [{
             pattern: new RegExp('https?://www.kongregate.com', 'i'),
-            actions: [_this13.Actions.HEADER, _this13.Actions.HOVER_BOX]
+            actions: [_this13.Actions.HEADER, _this13.Actions.HOVER_BOX, _this13.Actions.LEVELBUG]
         }, {
             pattern: new RegExp('https?://www.kongregate.com/accounts/', 'i'),
             actions: [_this13.Actions.PROFILE]
@@ -2684,7 +2699,7 @@ var LevelExtension = function (_Script3) {
                 }, "/accounts/" + a + ".chat", {
                     method: "get",
                     onComplete: function onComplete() {
-                        // Change only if the user is level 65
+                        // Change only if the user is max lvl
                         console.log(holodeck.uStorage, holodeck, lethis, this);
                         holodeck.uStorage.getLevel(a).then(function (level) {
                             var miniProfile = document.getElementById('user_mini_profile');
@@ -2703,6 +2718,7 @@ var LevelExtension = function (_Script3) {
         value: function injectUserProfileHoverbox() {
             UserProfileHoverbox.prototype._openHoverbox = UserProfileHoverbox.prototype.openHoverbox;
             var p = UserProfileHoverbox.prototype.openHoverbox.__proto__;
+            var lethis = this;
 
             UserProfileHoverbox.prototype.openHoverbox = function () {
                 var hoverbox = this;
@@ -2711,18 +2727,18 @@ var LevelExtension = function (_Script3) {
                 if (this._hoverboxCache[this._currentUserAnchor.href]) {
                     hoverbox._openHoverbox();
                 } else {
-                    var u = new this.LevelCapUser(user);
+                    var u = new lethis.LevelCapUser(user);
                     u.getLevel().then(function (level) {
                         hoverbox._openHoverbox();
 
-                        if (level < this.UserStorage.REAL_MAX_LVL) return;
+                        if (level < lethis.UserStorage.REAL_MAX_LVL) return;
 
                         hoverbox._hoverbox.observe('afterOpen', function () {
                             var l = hoverbox._hoverbox.container.getElementsByClassName('mini_profile_level')[0];
                             l.getElementsByTagName('span')[0].textContent = '' + level;
                         });
                     }).catch(function (err) {
-                        // Open it anyways, but the level may be capped at 65
+                        // Open it anyways, but the level may be capped at max
                         hoverbox._openHoverbox();
                         console.log(err);
                     });
@@ -2760,10 +2776,10 @@ var LevelExtension = function (_Script3) {
             var level = window.prompt('Set the new level cap.', this.UserStorage.FAKE_MAX_LVL);
             level = parseInt(level);
 
-            if (level > 65 && level <= 100) {
+            if (level > 75 && level <= 100) {
                 this.UserStorage.FAKE_MAX_LVL = level;
                 localStorage.setItem('fake_max_level', level);
-            } else if (!isNaN(level)) alert('New level cap must be between 66 and 100');
+            } else if (!isNaN(level)) alert('New level cap must be between 76 and 100');
         }
 
         // Creates the button to change the level cap
@@ -2808,6 +2824,7 @@ var LevelExtension = function (_Script3) {
 
     return LevelExtension;
 }(Script);
+
 //=require ../holodeckScript.js
 
 var PmNotifier = function (_HolodeckScript9) {

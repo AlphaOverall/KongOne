@@ -32,6 +32,7 @@
         new Kongquer(),
         new WhisperCatch(),
         new LargerAvatars(),
+        new BetterQuotes(),
         new PostCount(),
         new LevelExtension(),
         new SpamIstTot()

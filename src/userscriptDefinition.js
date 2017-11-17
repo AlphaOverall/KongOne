@@ -6,4 +6,5 @@
 // @date             04/19/2013
 // @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
+// @grant            GM_addStyle
 // ==/UserScript==

@@ -346,6 +346,7 @@ var BetterQuotes = function (_Script2) {
         key: "run",
         value: function run() {
             // Make sure $ is jQuery. Kongregate should load jQuery by default
+            // But has weird $ assignment
             var $ = jQuery;
 
             //Add styles
@@ -369,7 +370,6 @@ var BetterQuotes = function (_Script2) {
                     for (var _iterator = quotes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var quote = _step.value;
 
-                        console.log(quote);
                         //Create the button
                         if ($(quote).height() > 205) {
                             quoteTotal++;

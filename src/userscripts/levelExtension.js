@@ -9,7 +9,7 @@ class LevelExtension extends Script {
             levelPoints: [],
             REAL_MAX_LVL: 75,
             FAKE_MAX_LVL: 100,
-            USER_INFO: 'http://www.kongregate.com/api/user_info.json?username='
+            USER_INFO: 'https://www.kongregate.com/api/user_info.json?username='
         };
 
         this.UserStorage.levelPoints[75] = 57885;

@@ -105,6 +105,23 @@ class LevelExtension extends Script {
                     });
             },
 
+            LEVELBUG: function (le) {
+                Array.from(document.getElementsByClassName("levelbug")).forEach(function(levelbug) {
+                  var user = new le.LevelCapUser(levelbug.innerText);
+                      user.getPoints().then(function (points) {
+                          if (points < le.UserStorage.levelPoints[le.UserStorage.REAL_MAX_LVL])
+                              return Promise.reject('No need to update.');
+
+                          return user.getLevel(le);
+                      })
+                      .then(function (level) {
+                          le.updateLevelbug(levelbug, level);
+                      }).catch(function (err) {
+                          console.log(err);
+                      });
+                });
+            },
+
             HOVER_BOX: function (le) {
                 var ks = new le.KongScript();
 
@@ -117,7 +134,7 @@ class LevelExtension extends Script {
 
         this.UpdateActions = [{
                 pattern: new RegExp('https?://www.kongregate.com', 'i'),
-                actions: [this.Actions.HEADER, this.Actions.HOVER_BOX]
+                actions: [this.Actions.HEADER, this.Actions.HOVER_BOX, this.Actions.LEVELBUG]
             },
             {
                 pattern: new RegExp('https?://www.kongregate.com/accounts/', 'i'),
@@ -502,6 +519,7 @@ class LevelExtension extends Script {
     injectUserProfileHoverbox() {
         UserProfileHoverbox.prototype._openHoverbox = UserProfileHoverbox.prototype.openHoverbox;
         var p = UserProfileHoverbox.prototype.openHoverbox.__proto__;
+        var lethis = this;
 
         UserProfileHoverbox.prototype.openHoverbox = function () {
             var hoverbox = this;
@@ -510,11 +528,11 @@ class LevelExtension extends Script {
             if (this._hoverboxCache[this._currentUserAnchor.href]) {
                 hoverbox._openHoverbox();
             } else {
-                var u = new this.LevelCapUser(user);
+                var u = new lethis.LevelCapUser(user);
                 u.getLevel().then(function (level) {
                         hoverbox._openHoverbox();
 
-                        if (level < this.UserStorage.REAL_MAX_LVL) return;
+                        if (level < lethis.UserStorage.REAL_MAX_LVL) return;
 
                         hoverbox._hoverbox.observe('afterOpen', function () {
                             var l = hoverbox._hoverbox.container

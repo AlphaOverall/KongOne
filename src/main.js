@@ -33,6 +33,7 @@
         new WhisperCatch(),
         new LargerAvatars(),
         new PostCount(),
+        new LevelExtension(),
         new SpamIstTot()
     ];
 

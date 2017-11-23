@@ -106,7 +106,9 @@ class LevelExtension extends Script {
             },
 
             LEVELBUG: function (le) {
-                Array.from(document.getElementsByClassName("levelbug")).forEach(function(levelbug) {
+                Array.from(document.getElementsByClassName("levelbug"))
+                .filter((a) => a.innerText)
+                .forEach(function(levelbug) {
                   var user = new le.LevelCapUser(levelbug.innerText);
                       user.getPoints().then(function (points) {
                           if (points < le.UserStorage.levelPoints[le.UserStorage.REAL_MAX_LVL])

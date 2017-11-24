@@ -35,7 +35,8 @@
         new BetterQuotes(),
         new PostCount(),
         new LevelExtension(),
-        new SpamIstTot()
+        new SpamIstTot(),
+        new KongOneAlerts()
     ];
 
     optionsScript.scripts = scripts;

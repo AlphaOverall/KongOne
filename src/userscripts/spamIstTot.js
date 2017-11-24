@@ -23,13 +23,16 @@ class SpamIstTot extends HolodeckScript {
         ChatDialogue.prototype.compareMessages = function (a, b) {
             if (!a || !b)
                 return false;
+            try {
+                var c = a.getElementsByClassName('username')[0].getAttribute('username'),
+                    d = b.getElementsByClassName('username')[0].getAttribute('username'),
+                    e = a.getElementsByClassName('message')[0].innerHTML,
+                    f = b.getElementsByClassName('message')[0].innerHTML;
 
-            var c = a.getElementsByClassName('username')[0].getAttribute('username'),
-                d = b.getElementsByClassName('username')[0].getAttribute('username'),
-                e = a.getElementsByClassName('message')[0].innerHTML,
-                f = b.getElementsByClassName('message')[0].innerHTML;
-
-            return c == d && e == f;
+                return c == d && e == f;
+            } catch (ex) {
+                return false;
+            }
         };
 
         ChatDialogue.prototype.insert = function (a, b, c) {

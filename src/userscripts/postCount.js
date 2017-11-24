@@ -2,7 +2,7 @@
 
 class PostCount extends Script {
   constructor() {
-    super('Forum Post Count', /\/topics\//, true);
+    super('Forum Post Count', /\/topics\//, true, Script.CATEGORIES.FORUM);
   }
 
   run() {

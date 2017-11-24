@@ -21,14 +21,24 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// Categories enum
+var CATEGORIES = {
+    MISC: "Miscellaneous",
+    HIDDEN: "Hidden",
+    CHAT: "Chat",
+    FORUM: "Forum",
+    SITEWIDE: "Site-wide"
+};
+
 var Script = function () {
-    function Script(name, path, defaultEnabled) {
+    function Script(name, path, defaultEnabled, category) {
         _classCallCheck(this, Script);
 
         this.name = name;
         this.path = path;
         this.dom = null;
         this.defaultEnabled = defaultEnabled;
+        this.category = category || Script.CATEGORIES.MISC;
     }
 
     _createClass(Script, [{
@@ -56,6 +66,11 @@ var Script = function () {
         value: function run() {
             throw "run() not implemented for #{this.name} script";
         }
+    }], [{
+        key: "CATEGORIES",
+        get: function get() {
+            return CATEGORIES;
+        }
     }]);
 
     return Script;
@@ -64,10 +79,10 @@ var Script = function () {
 var HolodeckScript = function (_Script) {
     _inherits(HolodeckScript, _Script);
 
-    function HolodeckScript(name, path, defaultEnabled) {
+    function HolodeckScript(name, path, defaultEnabled, category) {
         _classCallCheck(this, HolodeckScript);
 
-        var _this = _possibleConstructorReturn(this, (HolodeckScript.__proto__ || Object.getPrototypeOf(HolodeckScript)).call(this, name, path, defaultEnabled));
+        var _this = _possibleConstructorReturn(this, (HolodeckScript.__proto__ || Object.getPrototypeOf(HolodeckScript)).call(this, name, path, defaultEnabled, category));
 
         _this.holodeckCheckCounter = 0;
         return _this;
@@ -111,7 +126,7 @@ var AfkCommand = function (_HolodeckScript) {
     function AfkCommand() {
         _classCallCheck(this, AfkCommand);
 
-        return _possibleConstructorReturn(this, (AfkCommand.__proto__ || Object.getPrototypeOf(AfkCommand)).call(this, 'Chat Afk Command', /^\/games/, true));
+        return _possibleConstructorReturn(this, (AfkCommand.__proto__ || Object.getPrototypeOf(AfkCommand)).call(this, 'Chat Afk Command', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(AfkCommand, [{
@@ -339,7 +354,7 @@ var BetterQuotes = function (_Script2) {
     function BetterQuotes() {
         _classCallCheck(this, BetterQuotes);
 
-        return _possibleConstructorReturn(this, (BetterQuotes.__proto__ || Object.getPrototypeOf(BetterQuotes)).call(this, 'Better Quotes', /\/(topics|posts)/, true));
+        return _possibleConstructorReturn(this, (BetterQuotes.__proto__ || Object.getPrototypeOf(BetterQuotes)).call(this, 'Better Quotes', /\/(topics|posts)/, true, Script.CATEGORIES.FORUM));
     }
 
     _createClass(BetterQuotes, [{
@@ -471,7 +486,7 @@ var ChatCharacterLimit = function (_HolodeckScript2) {
     function ChatCharacterLimit() {
         _classCallCheck(this, ChatCharacterLimit);
 
-        return _possibleConstructorReturn(this, (ChatCharacterLimit.__proto__ || Object.getPrototypeOf(ChatCharacterLimit)).call(this, 'Chat Character-limit', /^\/games/, true));
+        return _possibleConstructorReturn(this, (ChatCharacterLimit.__proto__ || Object.getPrototypeOf(ChatCharacterLimit)).call(this, 'Chat Character-limit', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(ChatCharacterLimit, [{
@@ -518,7 +533,7 @@ var ChatLineHighlight = function (_HolodeckScript3) {
     function ChatLineHighlight() {
         _classCallCheck(this, ChatLineHighlight);
 
-        return _possibleConstructorReturn(this, (ChatLineHighlight.__proto__ || Object.getPrototypeOf(ChatLineHighlight)).call(this, 'Chat Line Highlight', /^\/games/, true));
+        return _possibleConstructorReturn(this, (ChatLineHighlight.__proto__ || Object.getPrototypeOf(ChatLineHighlight)).call(this, 'Chat Line Highlight', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(ChatLineHighlight, [{
@@ -854,7 +869,7 @@ var ChatMouseoverTimestamp = function (_HolodeckScript4) {
     function ChatMouseoverTimestamp() {
         _classCallCheck(this, ChatMouseoverTimestamp);
 
-        return _possibleConstructorReturn(this, (ChatMouseoverTimestamp.__proto__ || Object.getPrototypeOf(ChatMouseoverTimestamp)).call(this, 'Chat Mouseover Timestamp', /^\/games/, false));
+        return _possibleConstructorReturn(this, (ChatMouseoverTimestamp.__proto__ || Object.getPrototypeOf(ChatMouseoverTimestamp)).call(this, 'Chat Mouseover Timestamp', /^\/games/, false, Script.CATEGORIES.CHAT));
     }
 
     _createClass(ChatMouseoverTimestamp, [{
@@ -1140,7 +1155,7 @@ var ChatResizer = function (_HolodeckScript5) {
     function ChatResizer() {
         _classCallCheck(this, ChatResizer);
 
-        return _possibleConstructorReturn(this, (ChatResizer.__proto__ || Object.getPrototypeOf(ChatResizer)).call(this, 'Chat Resizer', /^\/games/, true));
+        return _possibleConstructorReturn(this, (ChatResizer.__proto__ || Object.getPrototypeOf(ChatResizer)).call(this, 'Chat Resizer', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(ChatResizer, [{
@@ -1437,7 +1452,7 @@ var ChatTimestamp = function (_HolodeckScript6) {
     function ChatTimestamp() {
         _classCallCheck(this, ChatTimestamp);
 
-        return _possibleConstructorReturn(this, (ChatTimestamp.__proto__ || Object.getPrototypeOf(ChatTimestamp)).call(this, 'Chat Timestamp', /^\/games/, true));
+        return _possibleConstructorReturn(this, (ChatTimestamp.__proto__ || Object.getPrototypeOf(ChatTimestamp)).call(this, 'Chat Timestamp', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(ChatTimestamp, [{
@@ -1605,7 +1620,7 @@ var Kongquer = function (_HolodeckScript8) {
     function Kongquer() {
         _classCallCheck(this, Kongquer);
 
-        return _possibleConstructorReturn(this, (Kongquer.__proto__ || Object.getPrototypeOf(Kongquer)).call(this, 'Kongquer', /^\/games/, true));
+        return _possibleConstructorReturn(this, (Kongquer.__proto__ || Object.getPrototypeOf(Kongquer)).call(this, 'Kongquer', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(Kongquer, [{
@@ -2325,7 +2340,7 @@ var KongreLink = function (_HolodeckScript9) {
     function KongreLink() {
         _classCallCheck(this, KongreLink);
 
-        return _possibleConstructorReturn(this, (KongreLink.__proto__ || Object.getPrototypeOf(KongreLink)).call(this, 'Chat KongreLink', /^\/games/, true));
+        return _possibleConstructorReturn(this, (KongreLink.__proto__ || Object.getPrototypeOf(KongreLink)).call(this, 'Chat KongreLink', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(KongreLink, [{
@@ -2346,7 +2361,7 @@ var LargerAvatars = function (_Script3) {
     function LargerAvatars() {
         _classCallCheck(this, LargerAvatars);
 
-        return _possibleConstructorReturn(this, (LargerAvatars.__proto__ || Object.getPrototypeOf(LargerAvatars)).call(this, 'Larger Forum Avatars', /\/(topics|posts|messages|private_messages)/, true));
+        return _possibleConstructorReturn(this, (LargerAvatars.__proto__ || Object.getPrototypeOf(LargerAvatars)).call(this, 'Larger Forum Avatars', /\/(topics|posts|messages|private_messages)/, true, Script.CATEGORIES.FORUM));
     }
 
     _createClass(LargerAvatars, [{
@@ -2378,7 +2393,7 @@ var LevelExtension = function (_Script4) {
     function LevelExtension() {
         _classCallCheck(this, LevelExtension);
 
-        var _this15 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true));
+        var _this15 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true, Script.CATEGORIES.SITEWIDE));
 
         var lethis = _this15;
         _this15.UserStorage = {
@@ -2993,7 +3008,7 @@ var PmNotifier = function (_HolodeckScript10) {
     function PmNotifier() {
         _classCallCheck(this, PmNotifier);
 
-        return _possibleConstructorReturn(this, (PmNotifier.__proto__ || Object.getPrototypeOf(PmNotifier)).call(this, 'Chat PM Notifier', /^\/games/, true));
+        return _possibleConstructorReturn(this, (PmNotifier.__proto__ || Object.getPrototypeOf(PmNotifier)).call(this, 'Chat PM Notifier', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(PmNotifier, [{
@@ -3131,7 +3146,7 @@ var PostCount = function (_Script5) {
     function PostCount() {
         _classCallCheck(this, PostCount);
 
-        return _possibleConstructorReturn(this, (PostCount.__proto__ || Object.getPrototypeOf(PostCount)).call(this, 'Forum Post Count', /\/topics\//, true));
+        return _possibleConstructorReturn(this, (PostCount.__proto__ || Object.getPrototypeOf(PostCount)).call(this, 'Forum Post Count', /\/topics\//, true, Script.CATEGORIES.FORUM));
     }
 
     _createClass(PostCount, [{
@@ -3161,7 +3176,7 @@ var ReplyCommand = function (_HolodeckScript11) {
     function ReplyCommand() {
         _classCallCheck(this, ReplyCommand);
 
-        return _possibleConstructorReturn(this, (ReplyCommand.__proto__ || Object.getPrototypeOf(ReplyCommand)).call(this, 'Chat Reply-command', /^\/games/, true));
+        return _possibleConstructorReturn(this, (ReplyCommand.__proto__ || Object.getPrototypeOf(ReplyCommand)).call(this, 'Chat Reply-command', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(ReplyCommand, [{
@@ -3229,7 +3244,7 @@ var ShowScriptOptions = function (_Script6) {
     function ShowScriptOptions() {
         _classCallCheck(this, ShowScriptOptions);
 
-        var _this21 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true));
+        var _this21 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true, Script.CATEGORIES.HIDDEN));
 
         _this21.scripts = [];
         return _this21;
@@ -3239,16 +3254,28 @@ var ShowScriptOptions = function (_Script6) {
         key: "run",
         value: function run() {
             var dContainer = new Element("div", { "style": "background-color:#00000080;position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:10000;display:none;" });
-            var div = new Element("div", { "style": "background-color:#FFF;font:normal 11px/15px 'Lucida Grande',Verdana,Arial,sans-serif;padding:8px;display:none;position:fixed;transform:translate(-50%, -50%);top:50%;left:50%;z-index:10000;" }).update("<h2>Scripts</h2>Enable - Script Name<p></p>");
+            var div = new Element("div", { "style": "background-color:#FFF;font:normal 11px/15px 'Lucida Grande',Verdana,Arial,sans-serif;padding:15px;display:none;position:fixed;transform:translate(-50%, -50%);top:50%;left:50%;z-index:10000;padding-bottom:50px;" }).update("<h2>Scripts</h2>Enable - Script Name<p></p>");
             dContainer.onclick = toggleVisibility;
             document.body.appendChild(dContainer);
             document.body.appendChild(div);
+
+            var categories = {};
+            for (var category in Script.CATEGORIES) {
+                // Don't add hidden category
+                if (Script.CATEGORIES[category] === Script.CATEGORIES.HIDDEN) continue;
+                // Add div and header for other categories
+                var catdiv = new Element("div", { "style": "float:left;padding:10px;" });
+                var header = new Element("h5", { "style": "text-align:center" });
+                header.insert(Script.CATEGORIES[category]);
+                catdiv.insert(header);
+                categories[Script.CATEGORIES[category]] = catdiv;
+            }
 
             this.scripts.map(function (item) {
                 if (item.name == "this") return true; //aka, continue for each loops
 
                 var span = new Element("span", { "style": "margin-top: 5px !important;display: block;" });
-                div.insert(span);
+                categories[item.category].insert(span);
 
                 var checkbox = new Element("input", { "type": "checkbox", "id": "onescript-" + item.name, "style": "margin-top:2px;vertical-align:top;margin-right:8px;" });
                 var label = new Element("label", { "class": "pls" });
@@ -3266,13 +3293,23 @@ var ShowScriptOptions = function (_Script6) {
                 }
             });
 
-            var exitCon = new Element("div", { "style": "width:100%;" });
+            for (var _category in categories) {
+                var _catdiv = categories[_category];
+                console.log(_catdiv);
+                if (_catdiv.childElementCount > 1) {
+                    div.insert(_catdiv);
+                }
+            }
+
+            var exitCon = new Element("div", { "style": "width:100%;height:50px;bottom:0px;position:absolute;" });
             var exit = new Element("button", { "class": "btn btn_wide btn_action", "style": "display:block;margin:6px auto auto;" }).update("Exit");
             exit.onclick = toggleVisibility;
             exitCon.insert(exit);
             div.insert(exitCon);
-            var note = new Element("p").update("Refresh to apply your changes.");
-            div.insert(note);
+            var note = new Element("p", { "style": "text-align:center" }).update("Refresh to apply your changes. ");
+            var anchor = new Element("a", { "href": "http://www.kongregate.com/forums/1/topics/614435", "target": "_blank" }).update("Check out script thread.");
+            note.insert(anchor);
+            exitCon.insert(note);
             var sOB = document.getElementById("welcome_box_sign_out");
             var sButton = document.createElement("li");
             sButton.innerHTML = "<a href='#' style='border-bottom: 1px dotted #9b9a9a;display: inline;padding: 0px 5px 10px 5px;'>KongOne</a>";
@@ -3304,7 +3341,7 @@ var SpamIstTot = function (_HolodeckScript12) {
     function SpamIstTot() {
         _classCallCheck(this, SpamIstTot);
 
-        return _possibleConstructorReturn(this, (SpamIstTot.__proto__ || Object.getPrototypeOf(SpamIstTot)).call(this, 'Spam Ist Tot', /^\/games/, true));
+        return _possibleConstructorReturn(this, (SpamIstTot.__proto__ || Object.getPrototypeOf(SpamIstTot)).call(this, 'Spam Ist Tot', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(SpamIstTot, [{
@@ -3380,7 +3417,7 @@ var UsernameCompletion = function (_HolodeckScript13) {
     function UsernameCompletion() {
         _classCallCheck(this, UsernameCompletion);
 
-        return _possibleConstructorReturn(this, (UsernameCompletion.__proto__ || Object.getPrototypeOf(UsernameCompletion)).call(this, 'Chat Username-completion', /^\/games/, true));
+        return _possibleConstructorReturn(this, (UsernameCompletion.__proto__ || Object.getPrototypeOf(UsernameCompletion)).call(this, 'Chat Username-completion', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(UsernameCompletion, [{
@@ -3463,7 +3500,7 @@ var WhisperCatch = function (_HolodeckScript14) {
     function WhisperCatch() {
         _classCallCheck(this, WhisperCatch);
 
-        return _possibleConstructorReturn(this, (WhisperCatch.__proto__ || Object.getPrototypeOf(WhisperCatch)).call(this, 'Whisper Catch', /^\/games/, true));
+        return _possibleConstructorReturn(this, (WhisperCatch.__proto__ || Object.getPrototypeOf(WhisperCatch)).call(this, 'Whisper Catch', /^\/games/, true, Script.CATEGORIES.CHAT));
     }
 
     _createClass(WhisperCatch, [{

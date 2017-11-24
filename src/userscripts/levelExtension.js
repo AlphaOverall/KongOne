@@ -2,7 +2,7 @@
 
 class LevelExtension extends Script {
     constructor() {
-        super('Level Extension',  /^\//, true);
+        super('Level Extension',  /^\//, true, Script.CATEGORIES.SITEWIDE);
 
         var lethis = this;
         this.UserStorage = {

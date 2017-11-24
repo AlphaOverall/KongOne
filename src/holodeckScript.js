@@ -1,8 +1,8 @@
 //=require script.js
 
 class HolodeckScript extends Script {
-  constructor(name, path, defaultEnabled) {
-    super(name, path, defaultEnabled);
+  constructor(name, path, defaultEnabled, category) {
+    super(name, path, defaultEnabled, category);
     this.holodeckCheckCounter = 0;
   }
 

@@ -3,7 +3,7 @@
 class WhisperCatch extends HolodeckScript {
 
     constructor() {
-        super('Whisper Catch', /^\/games/, true);
+        super('Whisper Catch', /^\/games/, true, Script.CATEGORIES.CHAT);
     }
 
     run() {

@@ -301,7 +301,6 @@ class LevelExtension extends Script {
                 if (user.level === null) {
                     var promise = user.getPoints()
                         .then(function (points) {
-                            console.log(lethis.UserStorage, user.level);
                             var level = lethis.UserStorage.REAL_MAX_LVL;
                             while (level <= lethis.UserStorage.FAKE_MAX_LVL &&
                                 points >= lethis.UserStorage.levelPoints[level])
@@ -329,7 +328,6 @@ class LevelExtension extends Script {
              */
             getLevel: function (username) {
                 username = username.toLowerCase();
-                console.log(lethis.LevelCapUser);
                 if (this.users[username] === undefined)
                     this.users[username] = new lethis.LevelCapUser(username);
 
@@ -465,7 +463,6 @@ class LevelExtension extends Script {
         ChatRoom.prototype._updateUser = ChatRoom.prototype.updateUser;
         var lethis = this;
         ChatRoom.prototype.updateUser = function(a, b) {
-            console.log("We need to update holodeck!!!", this);
             holodeck.uStorage = holodeck.uStorage || new lethis.ChatUserStorage();
 
             var u = a.variables,
@@ -503,7 +500,6 @@ class LevelExtension extends Script {
                 method: "get",
                 onComplete: function () {
                     // Change only if the user is max lvl
-                    console.log(holodeck.uStorage, holodeck, lethis, this);
                     holodeck.uStorage.getLevel(a).then(function (level) {
                         var miniProfile = document.getElementById('user_mini_profile');
                         var levelRegExp = /level_([0-9]*)/i;

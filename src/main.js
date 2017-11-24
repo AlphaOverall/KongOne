@@ -35,6 +35,7 @@
         new BetterQuotes(),
         new PostCount(),
         new LevelExtension(),
+        new ThreadWatcher(),
         new SpamIstTot()
     ];
 

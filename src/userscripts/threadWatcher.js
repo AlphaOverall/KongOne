@@ -2,7 +2,7 @@
 
 class ThreadWatcher extends Script {
     constructor() {
-        super('Thread Watcher',  /^\//, true);
+        super('Thread Watcher',  /^\//, true, Script.CATEGORIES.SITEWIDE);
     }
     
     run() {

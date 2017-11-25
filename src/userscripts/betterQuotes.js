@@ -3,7 +3,7 @@
 class BetterQuotes extends Script {
 
   constructor() {
-    super('Better Quotes', /\/(topics|posts)/, true);
+    super('Better Quotes', /\/(topics|posts)/, true, Script.CATEGORIES.FORUM);
   }
 
   run() {

@@ -36,7 +36,8 @@
         new PostCount(),
         new LevelExtension(),
         new ThreadWatcher(),
-        new SpamIstTot()
+        new SpamIstTot(),
+        new ImagePreview()
     ];
 
     optionsScript.scripts = scripts;

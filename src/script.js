@@ -1,10 +1,19 @@
+// Categories enum
+const CATEGORIES = {
+  MISC: "Miscellaneous",
+  HIDDEN: "Hidden",
+  CHAT: "Chat",
+  FORUM: "Forum",
+  SITEWIDE: "Site-wide"
+};
 
 class Script {
-  constructor(name, path, defaultEnabled) {
+  constructor(name, path, defaultEnabled, category) {
     this.name = name;
     this.path = path;
     this.dom  = null;
     this.defaultEnabled = defaultEnabled;
+    this.category = category || Script.CATEGORIES.MISC;
   }
 
   checkPath() {
@@ -27,5 +36,9 @@ class Script {
 
   run() {
     throw `run() not implemented for #{this.name} script`;
+  }
+
+  static get CATEGORIES() {
+    return CATEGORIES;
   }
 }

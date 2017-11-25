@@ -2,7 +2,7 @@
 
 class ImagePreview extends HolodeckScript {
     constructor() {
-        super('Image Preview', /^\/games/, true);
+        super('Image Preview', /^\/games/, true, Script.CATEGORIES.CHAT);
     }
 
     run() {

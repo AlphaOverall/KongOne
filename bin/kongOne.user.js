@@ -2,7 +2,7 @@
 // @name             Kongregate One Developer
 // @namespace        profusiongames.com
 // @author           UnknownGuardian, AlphaOverall, Ruudiluca, Resterman
-// @version          2.9.2
+// @version          2.9.3
 // @date             04/19/2013
 // @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
@@ -504,7 +504,7 @@ var ChatCharacterLimit = function (_HolodeckScript2) {
                         var node = this._input_node.wrappedJSObject || this._input_node;
                         this.oldKeyPressLimit(a);
                         if (node.getValue().length > 249) {
-                            z = node.getValue();
+                            var z = node.getValue();
                             var y = "";
                             var n = z.match(/^(\/\S+\s+\S*\s*)(.*)/);
                             if (n) {

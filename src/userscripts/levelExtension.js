@@ -2,7 +2,7 @@
 
 class LevelExtension extends Script {
     constructor() {
-        super('Level Extension',  /^\//, true);
+        super('Level Extension',  /^\//, true, Script.CATEGORIES.SITEWIDE);
 
         var lethis = this;
         this.UserStorage = {
@@ -300,7 +300,6 @@ class LevelExtension extends Script {
                 if (user.level === null) {
                     var promise = user.getPoints()
                         .then(function (points) {
-                            console.log(lethis.UserStorage, user.level);
                             var level = lethis.UserStorage.REAL_MAX_LVL;
                             while (level <= lethis.UserStorage.FAKE_MAX_LVL &&
                                 points >= lethis.UserStorage.levelPoints[level])
@@ -328,7 +327,6 @@ class LevelExtension extends Script {
              */
             getLevel: function (username) {
                 username = username.toLowerCase();
-                console.log(lethis.LevelCapUser);
                 if (this.users[username] === undefined)
                     this.users[username] = new lethis.LevelCapUser(username);
 

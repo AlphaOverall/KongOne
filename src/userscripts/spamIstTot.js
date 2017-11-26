@@ -3,7 +3,7 @@
 class SpamIstTot extends HolodeckScript {
 
     constructor() {
-        super('Spam Ist Tot', /^\/games/, true);
+        super('Spam Ist Tot', /^\/games/, true, Script.CATEGORIES.CHAT);
     }
 
     run() {

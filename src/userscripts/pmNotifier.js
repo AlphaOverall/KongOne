@@ -3,7 +3,7 @@
 class PmNotifier extends HolodeckScript {
 
     constructor() {
-        super('Chat PM Notifier', /^\/games/, true);
+        super('Chat PM Notifier', /^\/games/, true, Script.CATEGORIES.CHAT);
     }
 
     run() {

@@ -3,7 +3,7 @@
 class LargerAvatars extends Script {
 
     constructor() {
-        super('Larger Forum Avatars', /\/(topics|posts|messages|private_messages)/, true);
+        super('Larger Forum Avatars', /\/(topics|posts|messages|private_messages)/, true, Script.CATEGORIES.FORUM);
     }
 
     run() {

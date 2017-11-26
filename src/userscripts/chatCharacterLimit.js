@@ -2,7 +2,7 @@
 
 class ChatCharacterLimit extends HolodeckScript {
   constructor() {
-    super('Chat Character-limit', /^\/games/, true);
+    super('Chat Character-limit', /^\/games/, true, Script.CATEGORIES.CHAT);
   }
 
   run() {
@@ -18,7 +18,7 @@ class ChatCharacterLimit extends HolodeckScript {
                 var node = (this._input_node.wrappedJSObject || this._input_node);
                 this.oldKeyPressLimit(a);
                 if (node.getValue().length > 249) {
-                    z = node.getValue();
+                    var z = node.getValue();
                     var y = "";
                     let n = z.match(/^(\/\S+\s+\S*\s*)(.*)/);
                     if (n){

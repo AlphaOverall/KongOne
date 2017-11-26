@@ -2,7 +2,7 @@
 
 class ChatResizer extends HolodeckScript {
     constructor() {
-        super('Chat Resizer', /^\/games/, true);
+        super('Chat Resizer', /^\/games/, true, Script.CATEGORIES.CHAT);
     }
 
     run() {
@@ -233,7 +233,7 @@ class ChatResizer extends HolodeckScript {
 
         var messageWindows = $$(".chat_message_window");
         for (var i = 0; i < messageWindows.length; i++) {
-            messageWindows[i].style.height = (tabPaneHeight - userListHeight - 93) + "px"; // 93 = roomname, users in room etc.
+            messageWindows[i].style.height = (tabPaneHeight - userListHeight - 93 - 14) + "px"; // 93 = roomname, users in room etc., 14 = charcount
         }
 
         var usersInRoom = $$(".users_in_room");

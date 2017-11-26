@@ -35,8 +35,10 @@
         new BetterQuotes(),
         new PostCount(),
         new LevelExtension(),
+        new KongOneAlerts(),
+        new ThreadWatcher(),
         new SpamIstTot(),
-        new KongOneAlerts()
+        new ImagePreview()
     ];
 
     optionsScript.scripts = scripts;

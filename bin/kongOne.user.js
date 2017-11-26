@@ -1393,7 +1393,7 @@ var ChatResizer = function (_HolodeckScript5) {
 
             var messageWindows = $$(".chat_message_window");
             for (var i = 0; i < messageWindows.length; i++) {
-                messageWindows[i].style.height = tabPaneHeight - userListHeight - 93 + "px"; // 93 = roomname, users in room etc.
+                messageWindows[i].style.height = tabPaneHeight - userListHeight - 93 - 14 + "px"; // 93 = roomname, users in room etc., 14 = charcount
             }
 
             var usersInRoom = $$(".users_in_room");

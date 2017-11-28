@@ -1,4 +1,5 @@
 //=require ../holodeckScript.js
+//=require kongOneMessenger.js
 
 class KongOneAlerts extends HolodeckScript {
 
@@ -8,38 +9,21 @@ class KongOneAlerts extends HolodeckScript {
     }
 
     run() {
-        // Constants
-        const BOTNAME = "KOneBot";
-        holodeck.sendKongOneMessage = function(type, data, userAgent) {
-            // Quick hacky wait for sendPrivateMessage function
-            function checkPM() {
-                if (!holodeck._active_dialogue || 
-                    !holodeck._active_dialogue._user_manager || 
-                    !holodeck._active_dialogue._user_manager.sendPrivateMessage) {
-                    setTimeout(checkPM, 500);
-                } else {
-                    // Send event
-                    holodeck._active_dialogue._user_manager.sendPrivateMessage(BOTNAME, JSON.stringify(
-                        {
-                            type: type,
-                            data: data,
-                            userAgent: userAgent || navigator.userAgent
-                        }
-                    ));
-                }
-            } checkPM();
-        }
-        
+        // Messenger to talk to bot. This makes sure we don't spam.
+        let messenger = new KongOneMessenger();
+        messenger.initialize();
 
         // Assign
         let CDialogue = this.dom.ChatDialogue;
         
         // Start event
-        holodeck.sendKongOneMessage("event", "enter");
+        messenger.stackMessage("event", "enter");
+
         // Register leave event
-        window.addEventListener("unload", function() {
-            holodeck.sendKongOneMessage("event", "exit");
-        });
+        window.onbeforeunload = function() {
+            messenger.stackMessage("event", "exit");
+            return null;
+        }
 
         // Save receivedPrivateMessage
         CDialogue.prototype.__koc_receivedPrivateMessage = CDialogue.prototype.receivedPrivateMessage;
@@ -49,7 +33,7 @@ class KongOneAlerts extends HolodeckScript {
                 message = a.data.message;
             
             // Skip handling if not from bot
-            if (username !== BOTNAME) {
+            if (username !== messenger.CHAT_BOT) {
                 this.__koc_receivedPrivateMessage(a);
                 return;
             }
@@ -69,6 +53,8 @@ class KongOneAlerts extends HolodeckScript {
                         non_user: true,
                         template: ChatDialogue.MOTD_MESSAGE_TEMPLATE
                     });
+                } else if (data.type === "ping") {
+                    // Ignore the message. This is the bot checking if we're online
                 }
             }
             catch(e) {
@@ -78,17 +64,31 @@ class KongOneAlerts extends HolodeckScript {
 
         // Register error event handling (sent to bot and then to devs)
         window.onerror = function(message, file, line, col, error) {
-            holodeck.sendKongOneMessage("error", message);
+            if (file) {
+                messenger.queueMessage("error", message);
+            }
         }
 
         // Add chat commands
         holodeck.addChatCommand("k1online", function(l, msg) {
-            holodeck.sendKongOneMessage("event", "usercount");
+            messenger.stackMessage("event", "usercount");
             return false;
         });
         holodeck.addChatCommand("k1message", function(l, msg) {
-            holodeck.sendKongOneMessage("message", msg.match(/\/k1message\s(.*)/)[1], 1)
+            messenger.stackMessage("message", msg.match(/\/k1message\s(.*)/)[1]);
             return false;
         })
+        holodeck.addChatCommand("k1setmod", function(l, msg) {
+            messenger.stackMessage("mod", msg.match(/\/k1setmod\s(.*)/)[1]);
+            return false;
+        });
+        holodeck.addChatCommand("k1setadmin", function(l, msg) {
+            messenger.stackMessage("admin", msg.match(/\/k1setadmin\s(.*)/)[1]);
+            return false;
+        });
+        holodeck.addChatCommand("k1reload", function(l, msg) {
+            messenger.stackMessage("reload", null);
+            return false;
+        });
     }
 }

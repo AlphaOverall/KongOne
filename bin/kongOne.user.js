@@ -1613,9 +1613,77 @@ var ImagePreview = function (_HolodeckScript7) {
 }(HolodeckScript);
 
 //=require ../holodeckScript.js
+//=require ../holodeckScript.js
 
-var KongOneAlerts = function (_HolodeckScript8) {
-    _inherits(KongOneAlerts, _HolodeckScript8);
+var KongOneMessenger = function (_HolodeckScript8) {
+    _inherits(KongOneMessenger, _HolodeckScript8);
+
+    function KongOneMessenger() {
+        _classCallCheck(this, KongOneMessenger);
+
+        var _this12 = _possibleConstructorReturn(this, (KongOneMessenger.__proto__ || Object.getPrototypeOf(KongOneMessenger)).call(this, 'this', /^\/games/, true));
+        // Call super
+
+
+        _this12.CHAT_BOT = "KOneBot";
+        _this12.CHAT_LIMIT = 60000 / 8;
+        _this12.messageList = [];
+        _this12.interval = null;
+        _this12.sending = false;
+        return _this12;
+    }
+
+    _createClass(KongOneMessenger, [{
+        key: "run",
+        value: function run() {
+            holodeck._last_message = new Date(Date.now() - this.CHAT_LIMIT);
+            holodeck.addOutgoingMessageFilter(function (msg, nextFunction) {
+                holodeck._last_message = new Date();
+                nextFunction(msg, nextFunction);
+            });
+        }
+    }, {
+        key: "queueMessage",
+        value: function queueMessage(type, data, dontforce) {
+            this.messageList.push({ type: type, data: data, userAgent: navigator.userAgent });
+            this.sending || this.sendMessage();
+        }
+    }, {
+        key: "stackMessage",
+        value: function stackMessage(type, data, dontforce) {
+            this.messageList.unshift({ type: type, data: data, userAgent: navigator.userAgent });
+            this.sending || this.sendMessage();
+        }
+    }, {
+        key: "sendMessage",
+        value: function sendMessage() {
+            if (!holodeck._active_dialogue || !holodeck._active_dialogue._user_manager || !holodeck._active_dialogue._user_manager.sendPrivateMessage) {
+                setTimeout(function () {
+                    this.sendMessage();
+                }.bind(this), 500);
+            } else if (this.messageList.length && new Date() - holodeck._last_message > this.CHAT_LIMIT) {
+                var message = this.messageList.shift();
+                holodeck._active_dialogue._user_manager.sendPrivateMessage(this.CHAT_BOT, JSON.stringify({
+                    type: message.type,
+                    data: message.data,
+                    userAgent: message.userAgent || navigator.userAgent
+                }));
+                holodeck._last_message = new Date();
+                this.sending = !!this.messageList.length;
+                if (this.messageList.length) {
+                    this.timeout = setTimeout(function () {
+                        this.sendMessage();
+                    }.bind(this), holodeck._last_message - new Date() + this.CHAT_LIMIT);
+                }
+            }
+        }
+    }]);
+
+    return KongOneMessenger;
+}(HolodeckScript);
+
+var KongOneAlerts = function (_HolodeckScript9) {
+    _inherits(KongOneAlerts, _HolodeckScript9);
 
     function KongOneAlerts() {
         _classCallCheck(this, KongOneAlerts);
@@ -1627,33 +1695,21 @@ var KongOneAlerts = function (_HolodeckScript8) {
     _createClass(KongOneAlerts, [{
         key: "run",
         value: function run() {
-            // Constants
-            var BOTNAME = "KOneBot";
-            holodeck.sendKongOneMessage = function (type, data, userAgent) {
-                // Quick hacky wait for sendPrivateMessage function
-                function checkPM() {
-                    if (!holodeck._active_dialogue || !holodeck._active_dialogue._user_manager || !holodeck._active_dialogue._user_manager.sendPrivateMessage) {
-                        setTimeout(checkPM, 500);
-                    } else {
-                        // Send event
-                        holodeck._active_dialogue._user_manager.sendPrivateMessage(BOTNAME, JSON.stringify({
-                            type: type,
-                            data: data,
-                            userAgent: userAgent || navigator.userAgent
-                        }));
-                    }
-                }checkPM();
-            };
+            // Messenger to talk to bot. This makes sure we don't spam.
+            var messenger = new KongOneMessenger();
+            messenger.initialize();
 
             // Assign
             var CDialogue = this.dom.ChatDialogue;
 
             // Start event
-            holodeck.sendKongOneMessage("event", "enter");
+            messenger.stackMessage("event", "enter");
+
             // Register leave event
-            window.addEventListener("unload", function () {
-                holodeck.sendKongOneMessage("event", "exit");
-            });
+            window.onbeforeunload = function () {
+                messenger.stackMessage("event", "exit");
+                return null;
+            };
 
             // Save receivedPrivateMessage
             CDialogue.prototype.__koc_receivedPrivateMessage = CDialogue.prototype.receivedPrivateMessage;
@@ -1663,7 +1719,7 @@ var KongOneAlerts = function (_HolodeckScript8) {
                     message = a.data.message;
 
                 // Skip handling if not from bot
-                if (username !== BOTNAME) {
+                if (username !== messenger.CHAT_BOT) {
                     this.__koc_receivedPrivateMessage(a);
                     return;
                 }
@@ -1678,22 +1734,38 @@ var KongOneAlerts = function (_HolodeckScript8) {
                             non_user: true,
                             template: ChatDialogue.MOTD_MESSAGE_TEMPLATE
                         });
+                    } else if (data.type === "ping") {
+                        // Ignore the message. This is the bot checking if we're online
                     }
                 } catch (e) {}
             };
 
             // Register error event handling (sent to bot and then to devs)
             window.onerror = function (message, file, line, col, error) {
-                holodeck.sendKongOneMessage("error", message);
+                if (file) {
+                    messenger.queueMessage("error", message);
+                }
             };
 
             // Add chat commands
             holodeck.addChatCommand("k1online", function (l, msg) {
-                holodeck.sendKongOneMessage("event", "usercount");
+                messenger.stackMessage("event", "usercount");
                 return false;
             });
             holodeck.addChatCommand("k1message", function (l, msg) {
-                holodeck.sendKongOneMessage("message", msg.match(/\/k1message\s(.*)/)[1], 1);
+                messenger.stackMessage("message", msg.match(/\/k1message\s(.*)/)[1]);
+                return false;
+            });
+            holodeck.addChatCommand("k1setmod", function (l, msg) {
+                messenger.stackMessage("mod", msg.match(/\/k1setmod\s(.*)/)[1]);
+                return false;
+            });
+            holodeck.addChatCommand("k1setadmin", function (l, msg) {
+                messenger.stackMessage("admin", msg.match(/\/k1setadmin\s(.*)/)[1]);
+                return false;
+            });
+            holodeck.addChatCommand("k1reload", function (l, msg) {
+                messenger.stackMessage("reload", null);
                 return false;
             });
         }
@@ -1703,8 +1775,8 @@ var KongOneAlerts = function (_HolodeckScript8) {
 }(HolodeckScript);
 //= require ../holodeckScript.js
 
-var Kongquer = function (_HolodeckScript9) {
-    _inherits(Kongquer, _HolodeckScript9);
+var Kongquer = function (_HolodeckScript10) {
+    _inherits(Kongquer, _HolodeckScript10);
 
     function Kongquer() {
         _classCallCheck(this, Kongquer);
@@ -2423,8 +2495,8 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
 
 //=require ../holodeckScript.js
 
-var KongreLink = function (_HolodeckScript10) {
-    _inherits(KongreLink, _HolodeckScript10);
+var KongreLink = function (_HolodeckScript11) {
+    _inherits(KongreLink, _HolodeckScript11);
 
     function KongreLink() {
         _classCallCheck(this, KongreLink);
@@ -2482,45 +2554,45 @@ var LevelExtension = function (_Script4) {
     function LevelExtension() {
         _classCallCheck(this, LevelExtension);
 
-        var _this16 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true, Script.CATEGORIES.SITEWIDE));
+        var _this17 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true, Script.CATEGORIES.SITEWIDE));
 
-        var lethis = _this16;
-        _this16.UserStorage = {
+        var lethis = _this17;
+        _this17.UserStorage = {
             levelPoints: [],
             REAL_MAX_LVL: 75,
             FAKE_MAX_LVL: 100,
             USER_INFO: 'https://www.kongregate.com/api/user_info.json?username='
         };
 
-        _this16.UserStorage.levelPoints[75] = 57885;
-        _this16.UserStorage.levelPoints[76] = 60485;
-        _this16.UserStorage.levelPoints[77] = 63180;
-        _this16.UserStorage.levelPoints[78] = 65970;
-        _this16.UserStorage.levelPoints[79] = 68855;
-        _this16.UserStorage.levelPoints[80] = 71835;
-        _this16.UserStorage.levelPoints[81] = 74920;
-        _this16.UserStorage.levelPoints[82] = 78110;
-        _this16.UserStorage.levelPoints[83] = 81405;
-        _this16.UserStorage.levelPoints[84] = 84805;
-        _this16.UserStorage.levelPoints[85] = 88310;
-        _this16.UserStorage.levelPoints[86] = 91930;
-        _this16.UserStorage.levelPoints[87] = 95665;
-        _this16.UserStorage.levelPoints[88] = 99515;
-        _this16.UserStorage.levelPoints[89] = 103480;
-        _this16.UserStorage.levelPoints[90] = 107560;
-        _this16.UserStorage.levelPoints[91] = 111765;
-        _this16.UserStorage.levelPoints[92] = 116095;
-        _this16.UserStorage.levelPoints[92] = 116095;
-        _this16.UserStorage.levelPoints[93] = 120550;
-        _this16.UserStorage.levelPoints[94] = 125130;
-        _this16.UserStorage.levelPoints[95] = 129835;
-        _this16.UserStorage.levelPoints[96] = 134675;
-        _this16.UserStorage.levelPoints[97] = 139650;
-        _this16.UserStorage.levelPoints[98] = 144760;
-        _this16.UserStorage.levelPoints[99] = 150005;
-        _this16.UserStorage.levelPoints[100] = 155385;
+        _this17.UserStorage.levelPoints[75] = 57885;
+        _this17.UserStorage.levelPoints[76] = 60485;
+        _this17.UserStorage.levelPoints[77] = 63180;
+        _this17.UserStorage.levelPoints[78] = 65970;
+        _this17.UserStorage.levelPoints[79] = 68855;
+        _this17.UserStorage.levelPoints[80] = 71835;
+        _this17.UserStorage.levelPoints[81] = 74920;
+        _this17.UserStorage.levelPoints[82] = 78110;
+        _this17.UserStorage.levelPoints[83] = 81405;
+        _this17.UserStorage.levelPoints[84] = 84805;
+        _this17.UserStorage.levelPoints[85] = 88310;
+        _this17.UserStorage.levelPoints[86] = 91930;
+        _this17.UserStorage.levelPoints[87] = 95665;
+        _this17.UserStorage.levelPoints[88] = 99515;
+        _this17.UserStorage.levelPoints[89] = 103480;
+        _this17.UserStorage.levelPoints[90] = 107560;
+        _this17.UserStorage.levelPoints[91] = 111765;
+        _this17.UserStorage.levelPoints[92] = 116095;
+        _this17.UserStorage.levelPoints[92] = 116095;
+        _this17.UserStorage.levelPoints[93] = 120550;
+        _this17.UserStorage.levelPoints[94] = 125130;
+        _this17.UserStorage.levelPoints[95] = 129835;
+        _this17.UserStorage.levelPoints[96] = 134675;
+        _this17.UserStorage.levelPoints[97] = 139650;
+        _this17.UserStorage.levelPoints[98] = 144760;
+        _this17.UserStorage.levelPoints[99] = 150005;
+        _this17.UserStorage.levelPoints[100] = 155385;
 
-        _this16.Actions = {
+        _this17.Actions = {
             HEADER: function HEADER(le) {
                 le.createCapChanger();
 
@@ -2603,19 +2675,19 @@ var LevelExtension = function (_Script4) {
 
         };
 
-        _this16.UpdateActions = [{
+        _this17.UpdateActions = [{
             pattern: new RegExp('https?://www.kongregate.com', 'i'),
-            actions: [_this16.Actions.HEADER, _this16.Actions.HOVER_BOX, _this16.Actions.LEVELBUG]
+            actions: [_this17.Actions.HEADER, _this17.Actions.HOVER_BOX, _this17.Actions.LEVELBUG]
         }, {
             pattern: new RegExp('https?://www.kongregate.com/accounts/', 'i'),
-            actions: [_this16.Actions.PROFILE]
+            actions: [_this17.Actions.PROFILE]
         }, {
             pattern: new RegExp('https?://www.kongregate.com/games/', 'i'),
-            actions: [_this16.Actions.CHAT]
+            actions: [_this17.Actions.CHAT]
         }];
 
-        _this16.KongScript = function () {};
-        _this16.KongScript.prototype = {
+        _this17.KongScript = function () {};
+        _this17.KongScript.prototype = {
 
             CHECK_TIMEOUT: 10, // seconds before reaching timeout
             CHECK_INTERVAL: 100, // milliseconds between class existance check
@@ -2656,11 +2728,11 @@ var LevelExtension = function (_Script4) {
             }
         };
 
-        _this16.ProfileUser = function () {
+        _this17.ProfileUser = function () {
             this.points = null;
             this.level = null;
         };
-        _this16.ProfileUser.prototype = {
+        _this17.ProfileUser.prototype = {
 
             /**
              *	Return points based on the points in the loaded profile page.
@@ -2717,12 +2789,12 @@ var LevelExtension = function (_Script4) {
 
         };
 
-        _this16.LevelCapUser = function (username) {
+        _this17.LevelCapUser = function (username) {
             this.username = username;
             this.points = null;
             this.level = null;
         };
-        _this16.LevelCapUser.prototype = {
+        _this17.LevelCapUser.prototype = {
 
             /**
              *	Return the user points. If points weren't loaded, it will load them
@@ -2771,10 +2843,10 @@ var LevelExtension = function (_Script4) {
 
         };
 
-        _this16.ChatUserStorage = function () {
+        _this17.ChatUserStorage = function () {
             this.users = {};
         };
-        _this16.ChatUserStorage.prototype = {
+        _this17.ChatUserStorage.prototype = {
             /**
              *	Return the level of the user.
              *
@@ -2788,20 +2860,20 @@ var LevelExtension = function (_Script4) {
             }
 
         };
-        return _this16;
+        return _this17;
     }
 
     _createClass(LevelExtension, [{
         key: "run",
         value: function run() {
-            var _this17 = this;
+            var _this18 = this;
 
             window.addEventListener('load', function () {
-                _this17.createLevelbugCSS();
-                _this17.getFakeMaxLevel();
-                _this17.UpdateActions.forEach(function (uAction, i, arr) {
+                _this18.createLevelbugCSS();
+                _this18.getFakeMaxLevel();
+                _this18.UpdateActions.forEach(function (uAction, i, arr) {
                     if (uAction.pattern.test(document.URL)) uAction.actions.forEach(function (f, i, arr) {
-                        f(_this17);
+                        f(_this18);
                     });
                 });
             });
@@ -3046,7 +3118,7 @@ var LevelExtension = function (_Script4) {
     }, {
         key: "createCapChanger",
         value: function createCapChanger() {
-            var _this18 = this;
+            var _this19 = this;
 
             var levelCapChanger = document.createElement('li');
 
@@ -3059,7 +3131,7 @@ var LevelExtension = function (_Script4) {
             linkCapChanger.innerHTML = 'Level cap';
             linkCapChanger.href = '#';
             linkCapChanger.addEventListener('click', function () {
-                _this18.setFakeMaxLevel();
+                _this19.setFakeMaxLevel();
             });
             levelCapChanger.appendChild(linkCapChanger);
 
@@ -3086,8 +3158,8 @@ var LevelExtension = function (_Script4) {
 
 //=require ../holodeckScript.js
 
-var PmNotifier = function (_HolodeckScript11) {
-    _inherits(PmNotifier, _HolodeckScript11);
+var PmNotifier = function (_HolodeckScript12) {
+    _inherits(PmNotifier, _HolodeckScript12);
 
     function PmNotifier() {
         _classCallCheck(this, PmNotifier);
@@ -3254,8 +3326,8 @@ var PostCount = function (_Script5) {
 
 //=require ../holodeckScript.js
 
-var ReplyCommand = function (_HolodeckScript12) {
-    _inherits(ReplyCommand, _HolodeckScript12);
+var ReplyCommand = function (_HolodeckScript13) {
+    _inherits(ReplyCommand, _HolodeckScript13);
 
     function ReplyCommand() {
         _classCallCheck(this, ReplyCommand);
@@ -3328,10 +3400,10 @@ var ShowScriptOptions = function (_Script6) {
     function ShowScriptOptions() {
         _classCallCheck(this, ShowScriptOptions);
 
-        var _this22 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true, Script.CATEGORIES.HIDDEN));
+        var _this23 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true, Script.CATEGORIES.HIDDEN));
 
-        _this22.scripts = [];
-        return _this22;
+        _this23.scripts = [];
+        return _this23;
     }
 
     _createClass(ShowScriptOptions, [{
@@ -3419,8 +3491,8 @@ var ShowScriptOptions = function (_Script6) {
 
 //=require ../holodeckScript.js
 
-var SpamIstTot = function (_HolodeckScript13) {
-    _inherits(SpamIstTot, _HolodeckScript13);
+var SpamIstTot = function (_HolodeckScript14) {
+    _inherits(SpamIstTot, _HolodeckScript14);
 
     function SpamIstTot() {
         _classCallCheck(this, SpamIstTot);
@@ -4084,8 +4156,8 @@ var ThreadWatcher = function (_Script7) {
 }(Script);
 //=require ../holodeckScript.js
 
-var UsernameCompletion = function (_HolodeckScript14) {
-    _inherits(UsernameCompletion, _HolodeckScript14);
+var UsernameCompletion = function (_HolodeckScript15) {
+    _inherits(UsernameCompletion, _HolodeckScript15);
 
     function UsernameCompletion() {
         _classCallCheck(this, UsernameCompletion);
@@ -4167,8 +4239,8 @@ var UsernameCompletion = function (_HolodeckScript14) {
 
 //=require ../holodeckScript.js
 
-var WhisperCatch = function (_HolodeckScript15) {
-    _inherits(WhisperCatch, _HolodeckScript15);
+var WhisperCatch = function (_HolodeckScript16) {
+    _inherits(WhisperCatch, _HolodeckScript16);
 
     function WhisperCatch() {
         _classCallCheck(this, WhisperCatch);
@@ -4179,12 +4251,12 @@ var WhisperCatch = function (_HolodeckScript15) {
     _createClass(WhisperCatch, [{
         key: "run",
         value: function run() {
-            var _this27 = this;
+            var _this28 = this;
 
             var dom = this.dom;
             var CDialogue = dom.ChatDialogue;
             var removeWhisper = function removeWhisper(w) {
-                _this27.removeWhisper(w);
+                _this28.removeWhisper(w);
             };
 
             holodeck.__wc_whisperCount = 0;
@@ -4201,7 +4273,7 @@ var WhisperCatch = function (_HolodeckScript15) {
             };
 
             this.__wc_interval = setInterval(function () {
-                _this27.restoreWhispers();
+                _this28.restoreWhispers();
             }, WhisperCatch.CHAT_DIALOGUE_RETRY);
 
             holodeck.addChatCommand('wctime', function (holodeck, str) {

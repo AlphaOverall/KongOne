@@ -2,7 +2,7 @@
 // @name             Kongregate One Developer
 // @namespace        profusiongames.com
 // @author           UnknownGuardian, AlphaOverall, Ruudiluca, Resterman
-// @version          2.9.3
+// @version          2.9.4
 // @date             04/19/2013
 // @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
@@ -2878,7 +2878,9 @@ var LevelExtension = function (_Script4) {
 
                             if (level >= lethis.UserStorage.REAL_MAX_LVL) miniProfile.innerHTML = miniProfile.innerHTML.replace(levelRegExp, 'level_' + level);
 
-                            !1 === d._chat_tab_clicked && (d.hideSpinner(), e.setupBanAndSilencingControls(a), active_user.addCapturedSelector("#add_friend"), active_user.addCapturedSelector("#mute_user"));
+                            !1 === d._chat_tab_clicked && (d.hideSpinner(), e.setupBanAndSilencingControls(a), active_user.addCapturedSelector("#mute_user"));
+                            // Originally included an addCapturedSelector for add friend but can't have that text on greasyfork
+                            // I don't think it breaks functionality so for now we can remove it.
                         });
                     }
                 });

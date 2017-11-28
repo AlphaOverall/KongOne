@@ -1,0 +1,87 @@
+//=require ../holodeckScript.js
+
+class ChatLog extends HolodeckScript {
+    constructor() {
+      super('ChatLog', /^\/games/, true, Script.CATEGORIES.CHAT);
+    }
+  
+    run() {
+        holodeck.addChatCommand("chatlog", function(l, msg){
+            let z = msg.match(/^\/\S+\s+(.+)/), type = ".txt";
+            // Allow an optional html download
+            if (z && z[1] == "html") type = ".html";
+            // Get active chat message window and log
+            let element = jQuery(".chat_room_template:visible .chat_message_window")[0];
+            let log = element.innerText;
+            if (type === ".html") {
+                // Add styling to html files
+                // Just grabbed these from Kong, probably not comprehensive or all necessary
+                log = `
+                <style>
+                .chat_message_window {
+                    background-color: #fff;
+                    margin-top: 3px;
+                    max-height: 500px;
+                    overflow-x: hidden;
+                    overflow-y: auto;
+                    text-align: left;
+                    font: normal 11px/15px Verdana, Arial, sans-serif;
+                }
+                .chat_message_window p .timestamp {
+                    color: #888;
+                    display: block;
+                    font: 10px/12px Arial, sans-serif;
+                    text-transform: uppercase;
+                }
+                .chat_message_window p .username {
+                    text-decoration: none;
+                }
+                .chat_message_window .chat_message_window_username {
+                    color: #285588;
+                    cursor: pointer;
+                    text-decoration: underline;
+                }
+                .chat_message_window .is_self, .chat_message_window .sent_whisper span.username {
+                    color: #900;
+                }
+                .chat_message_window p .message {
+                    line-height: 14px;
+                }
+                .hyphenate, .hyphenate * {
+                    word-wrap: break-word;
+                    -webkit-hyphens: auto;
+                    -moz-hyphens: auto;
+                    -ms-hyphens: auto;
+                    hyphens: auto;
+                }
+                .chat_message_window .even {
+                    background-color: #e3e3e3;
+                }
+                .chat_message_window p {
+                    margin: 1px 0;
+                    padding: 4px 6px 4px 5px;
+                }
+                .chat_message_window .whisper {
+                    background-color: #deeaf6;
+                    font-style: italic;
+                    margin: 2px 0;
+                }
+                </style>`;
+                log += `<div class="chat_message_window">${element.innerHTML}</div>`;
+            }
+            // Create link to download document
+            var download = document.createElement("a");
+            download.href = "data:attachment/text," + encodeURI(log);
+            download.target = "_blank";
+            // Set a unique name
+            download.download = "Log_" + (new Date().toLocaleString()) + type;
+            // Download it
+            download.click();
+            // Don't send command to chat window
+            return false;
+        });
+        // Add /log as an optional form of command
+        holodeck._chat_commands.log = holodeck._chat_commands.chatlog;
+    }
+}
+  

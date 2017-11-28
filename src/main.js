@@ -37,7 +37,8 @@
         new LevelExtension(),
         new ThreadWatcher(),
         new SpamIstTot(),
-        new ImagePreview()
+        new ImagePreview(),
+        new ChatLog()
     ];
 
     optionsScript.scripts = scripts;

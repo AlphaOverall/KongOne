@@ -70,13 +70,17 @@ class ChatLog extends HolodeckScript {
                 log += `<div class="chat_message_window">${element.innerHTML}</div>`;
             }
             // Create link to download document
-            var download = document.createElement("a");
-            download.href = "data:attachment/text," + encodeURI(log);
+            let download = document.createElement("a");
+            download.href = "data:text/html;charset=UTF-8," + encodeURIComponent(log);
             download.target = "_blank";
             // Set a unique name
             download.download = "Log_" + (new Date().toLocaleString()) + type;
+            // Add element (needed for FF)
+            document.body.appendChild(download);
             // Download it
             download.click();
+            // Remove element
+            document.body.removeChild(download);
             // Don't send command to chat window
             return false;
         });

@@ -2,7 +2,7 @@
 // @name             Kongregate One Developer
 // @namespace        profusiongames.com
 // @author           UnknownGuardian, AlphaOverall, Ruudiluca, Resterman
-// @version          2.9.4
+// @version          2.9.5
 // @date             04/19/2013
 // @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
@@ -891,12 +891,16 @@ var ChatLog = function (_HolodeckScript4) {
                 }
                 // Create link to download document
                 var download = document.createElement("a");
-                download.href = "data:attachment/text," + encodeURI(log);
+                download.href = "data:text/html;charset=UTF-8," + encodeURIComponent(log);
                 download.target = "_blank";
                 // Set a unique name
                 download.download = "Log_" + new Date().toLocaleString() + type;
+                // Add element (needed for FF)
+                document.body.appendChild(download);
                 // Download it
                 download.click();
+                // Remove element
+                document.body.removeChild(download);
                 // Don't send command to chat window
                 return false;
             });

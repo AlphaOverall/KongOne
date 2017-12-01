@@ -26,8 +26,8 @@ class ShowScriptOptions extends Script {
         }
 
         this.scripts.map(function(item) {
-            if (item.name == "this")
-            return true; //aka, continue for each loops
+            if (item.category === Script.CATEGORIES.HIDDEN)
+                return true; //aka, continue for each loops
             
             var span = new Element("span", {"style":"margin-top: 5px !important;display: block;"});
             categories[item.category].insert(span);

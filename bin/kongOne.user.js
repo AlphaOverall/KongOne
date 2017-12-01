@@ -524,7 +524,6 @@ var ChatCharacterLimit = function (_HolodeckScript2) {
 
     return ChatCharacterLimit;
 }(HolodeckScript);
-
 //=require ../holodeckScript.js
 
 var ChatLineHighlight = function (_HolodeckScript3) {
@@ -3321,7 +3320,7 @@ var ShowScriptOptions = function (_Script6) {
             }
 
             this.scripts.map(function (item) {
-                if (item.name == "this") return true; //aka, continue for each loops
+                if (item.category === Script.CATEGORIES.HIDDEN) return true; //aka, continue for each loops
 
                 var span = new Element("span", { "style": "margin-top: 5px !important;display: block;" });
                 categories[item.category].insert(span);

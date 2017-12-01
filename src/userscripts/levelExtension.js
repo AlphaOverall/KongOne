@@ -9,7 +9,7 @@ class LevelExtension extends Script {
             levelPoints: [],
             REAL_MAX_LVL: 75,
             FAKE_MAX_LVL: 100,
-            USER_INFO: 'https://www.kongregate.com/api/user_info.json?username='
+            USER_INFO: `${location.origin}/api/user_info.json?username=`
         };
 
         this.UserStorage.levelPoints[75] = 57885;
@@ -406,7 +406,7 @@ class LevelExtension extends Script {
                 reject(this.statusText);
             });
         });
-    };
+    }
 
     // Update my kong hover profile
     updateMyKongProfile(user) {

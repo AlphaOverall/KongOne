@@ -2450,7 +2450,7 @@ var LevelExtension = function (_Script4) {
             levelPoints: [],
             REAL_MAX_LVL: 75,
             FAKE_MAX_LVL: 100,
-            USER_INFO: 'https://www.kongregate.com/api/user_info.json?username='
+            USER_INFO: location.origin + "/api/user_info.json?username="
         };
 
         _this16.UserStorage.levelPoints[75] = 57885;
@@ -2828,11 +2828,11 @@ var LevelExtension = function (_Script4) {
                 });
             });
         }
-    }, {
-        key: "updateMyKongProfile",
-
 
         // Update my kong hover profile
+
+    }, {
+        key: "updateMyKongProfile",
         value: function updateMyKongProfile(user) {
             var points = user.points,
                 level = user.level;
@@ -3343,7 +3343,6 @@ var ShowScriptOptions = function (_Script6) {
 
             for (var _category in categories) {
                 var _catdiv = categories[_category];
-                console.log(_catdiv);
                 if (_catdiv.childElementCount > 1) {
                     div.insert(_catdiv);
                 }
@@ -3355,7 +3354,7 @@ var ShowScriptOptions = function (_Script6) {
             exitCon.insert(exit);
             div.insert(exitCon);
             var note = new Element("p", { "style": "text-align:center" }).update("Refresh to apply your changes. ");
-            var anchor = new Element("a", { "href": "http://www.kongregate.com/forums/1/topics/614435", "target": "_blank" }).update("Check out script thread.");
+            var anchor = new Element("a", { "href": "https://www.kongregate.com/forums/1/topics/614435", "target": "_blank" }).update("Check out script thread.");
             note.insert(anchor);
             exitCon.insert(note);
             var sOB = document.getElementById("welcome_box_sign_out");
@@ -3816,7 +3815,7 @@ var ThreadWatcher = function (_Script7) {
 
             function pullWatchedThreadsAndRecentPosts() {
                 localStorage.setItem(window._PULL_ID, new Date());
-                new Ajax.Request('https://www.kongregate.com/users/' + active_user.id() + '/posts.json', {
+                new Ajax.Request(location.origin + "/users/" + active_user.id() + '/posts.json', {
                     method: 'get',
                     onSuccess: function onSuccess(transport) {
                         var json = transport.responseText.evalJSON();console.log("Found users", json.users.length);
@@ -3908,7 +3907,7 @@ var ThreadWatcher = function (_Script7) {
                 var forumID = storedThread.forumID;
                 var seenPostCount = storedThread.seenPostCount;
                 console.log("[Thread Watcher] We are making a request to:", 'https://www.kongregate.com/forums/' + forumID + '/topics/' + processThreadID + '.json');
-                new Ajax.Request('https://www.kongregate.com/forums/' + forumID + '/topics/' + processThreadID + '.json', {
+                new Ajax.Request(location.origin + "/forums/" + forumID + '/topics/' + processThreadID + '.json', {
                     method: 'get',
                     onSuccess: function onSuccess(transport) {
                         console.log("[Thread Watcher] We got a response to:", 'https://www.kongregate.com/forums/' + forumID + '/topics/' + processThreadID + '.json');

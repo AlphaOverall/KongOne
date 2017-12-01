@@ -38,7 +38,8 @@
         new ThreadWatcher(),
         new SpamIstTot(),
         new ImagePreview(),
-        new ChatLog()
+        new ChatLog(),
+        new JoinChatRoom()
     ];
 
     optionsScript.scripts = scripts;

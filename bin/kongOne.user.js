@@ -1878,27 +1878,26 @@ var Kongquer = function (_HolodeckScript9) {
                 var roomDetails = l.chatWindow().activeRoom();
                 var allUsers = roomDetails.users();
                 var highFans = "";
-                var highestFans = 0;
-                var count = 0;
-                var content;
+                var count = 0,
+                    users = [],
+                    finished = 0;
 
-                var f = function f(evt) {
-                    amount = evt.responseText;
-                };
-                for (var i = 0; i < allUsers.length; i++) {
-                    var username = allUsers[i].username;
-                    var url = "http://www.kongregate.com/accounts/" + username + "#user_followers";
-                    var request = new XMLHttpRequest();
-                    var amount;
-                    request.addEventListener("load", f, false);
-
-                    request.open("GET", url, true);
-                    request.send();
-                    var div = document.createElement("div");
-                    div.innerHTML = amount;
-                    var a = div.getElementsByTagName("li");
-                }
-                l.activeDialogue().displayUnsanitizedMessage("Highest Fans in Room", content, { "class": "whisper received_whisper" }, { non_user: true });
+                var gets = allUsers.map(function (user) {
+                    return jQuery.get(location.origin + "/accounts/" + user.username, function (data) {
+                        finished++;
+                        var div = jQuery(data);
+                        var ncount = parseInt(jQuery(div).find("#user_followers").text().replace(/\D/g, ""));
+                        if (ncount > count) {
+                            count = ncount;
+                            users = [user.username];
+                        } else if (ncount === count) {
+                            users.push(user.username);
+                        }
+                        if (finished === allUsers.length) {
+                            l.activeDialogue().displayUnsanitizedMessage("Highest Fans in Room", count + " for user" + (users.length > 1 ? "s" : "") + " " + users.join(", "), { "class": "whisper received_whisper" }, { non_user: true });
+                        }
+                    });
+                });
                 return false;
             });
 

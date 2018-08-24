@@ -1662,10 +1662,175 @@ var ImagePreview = function (_HolodeckScript8) {
     return ImagePreview;
 }(HolodeckScript);
 
+//=require ../holodeckScript.js
+
+// Helper class
+
+
+var ChatRoomList = function () {
+    function ChatRoomList() {
+        _classCallCheck(this, ChatRoomList);
+
+        this.loaded = false;
+        this.list = null;
+    }
+
+    _createClass(ChatRoomList, [{
+        key: "parseList",
+        value: function parseList(crlist) {
+            var newlist = [],
+                listids = [];
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = crlist[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var group = _step2.value;
+                    var _iteratorNormalCompletion3 = true;
+                    var _didIteratorError3 = false;
+                    var _iteratorError3 = undefined;
+
+                    try {
+                        for (var _iterator3 = group.rooms[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                            var room = _step3.value;
+
+                            if (listids.indexOf(room.id) < 0) {
+                                newlist.push(room);
+                                listids.push(room.id);
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError3 = true;
+                        _iteratorError3 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                _iterator3.return();
+                            }
+                        } finally {
+                            if (_didIteratorError3) {
+                                throw _iteratorError3;
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            return newlist;
+        }
+    }, {
+        key: "getRoom",
+        value: function getRoom(match) {
+            return this.getList().then(function (list) {
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
+
+                try {
+                    for (var _iterator4 = list[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var room = _step4.value;
+
+                        if (room.id === match || RegExp(match, "i").test(room.name)) {
+                            return room;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
+                        }
+                    } finally {
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
+                        }
+                    }
+                }
+
+                return null;
+            });
+        }
+    }, {
+        key: "getList",
+        value: function getList() {
+            var rooms = this;
+            // If list already exists, return it as a promise
+            if (rooms.list) return new Promise(function (resolve) {
+                return resolve(rooms.list.slice());
+            });
+            // Otherwise query for list
+            return jQuery.getJSON(location.origin + "/rooms.js").always(function (result) {
+                try {
+                    rooms.list = rooms.parseList(JSON.parse(result.responseText.slice(20, -3)));
+                    rooms.loaded = true;
+                    return new Promise(function (resolve) {
+                        return resolve(rooms.list.slice());
+                    });
+                } catch (ex) {
+                    console.log("[KongOne]: Could not load room list for current chatroom change script");
+                    console.error(ex);
+                    return Promise.reject(Error(ex));
+                }
+            });
+        }
+    }]);
+
+    return ChatRoomList;
+}();
+
+// Script
+
+
+var JoinChatRoom = function (_HolodeckScript9) {
+    _inherits(JoinChatRoom, _HolodeckScript9);
+
+    function JoinChatRoom() {
+        _classCallCheck(this, JoinChatRoom);
+
+        var _this13 = _possibleConstructorReturn(this, (JoinChatRoom.__proto__ || Object.getPrototypeOf(JoinChatRoom)).call(this, 'Join Chat by ID/Name', /^\/games/, true, Script.CATEGORIES.CHAT));
+
+        _this13._chatRoomList = new ChatRoomList();
+        return _this13;
+    }
+
+    _createClass(JoinChatRoom, [{
+        key: "run",
+        value: function run() {
+            var _this14 = this;
+
+            holodeck._chatRoomList = this._chatRoomList;
+            holodeck.addChatCommand("join", function (l, msg) {
+                msg = msg.match(/^\/\S+\s+(.+)/)[1];
+                _this14._chatRoomList.getRoom(msg).then(function (data) {
+                    if (data) l.chatWindow().joinRoom(data);else l.activeDialogue().displayUnsanitizedMessage("Kong Bot", "Cannot find specified chat", { "class": "whisper received_whisper" }, { non_user: true });
+                });
+                return false;
+            });
+        }
+    }]);
+
+    return JoinChatRoom;
+}(HolodeckScript);
 //= require ../holodeckScript.js
 
-var Kongquer = function (_HolodeckScript9) {
-    _inherits(Kongquer, _HolodeckScript9);
+var Kongquer = function (_HolodeckScript10) {
+    _inherits(Kongquer, _HolodeckScript10);
 
     function Kongquer() {
         _classCallCheck(this, Kongquer);
@@ -2324,8 +2489,8 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
 
 //=require ../holodeckScript.js
 
-var KongreLink = function (_HolodeckScript10) {
-    _inherits(KongreLink, _HolodeckScript10);
+var KongreLink = function (_HolodeckScript11) {
+    _inherits(KongreLink, _HolodeckScript11);
 
     function KongreLink() {
         _classCallCheck(this, KongreLink);
@@ -2383,45 +2548,45 @@ var LevelExtension = function (_Script4) {
     function LevelExtension() {
         _classCallCheck(this, LevelExtension);
 
-        var _this16 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true, Script.CATEGORIES.SITEWIDE));
+        var _this18 = _possibleConstructorReturn(this, (LevelExtension.__proto__ || Object.getPrototypeOf(LevelExtension)).call(this, 'Level Extension', /^\//, true, Script.CATEGORIES.SITEWIDE));
 
-        var lethis = _this16;
-        _this16.UserStorage = {
+        var lethis = _this18;
+        _this18.UserStorage = {
             levelPoints: [],
             REAL_MAX_LVL: 75,
             FAKE_MAX_LVL: 100,
             USER_INFO: location.origin + "/api/user_info.json?username="
         };
 
-        _this16.UserStorage.levelPoints[75] = 57885;
-        _this16.UserStorage.levelPoints[76] = 60485;
-        _this16.UserStorage.levelPoints[77] = 63180;
-        _this16.UserStorage.levelPoints[78] = 65970;
-        _this16.UserStorage.levelPoints[79] = 68855;
-        _this16.UserStorage.levelPoints[80] = 71835;
-        _this16.UserStorage.levelPoints[81] = 74920;
-        _this16.UserStorage.levelPoints[82] = 78110;
-        _this16.UserStorage.levelPoints[83] = 81405;
-        _this16.UserStorage.levelPoints[84] = 84805;
-        _this16.UserStorage.levelPoints[85] = 88310;
-        _this16.UserStorage.levelPoints[86] = 91930;
-        _this16.UserStorage.levelPoints[87] = 95665;
-        _this16.UserStorage.levelPoints[88] = 99515;
-        _this16.UserStorage.levelPoints[89] = 103480;
-        _this16.UserStorage.levelPoints[90] = 107560;
-        _this16.UserStorage.levelPoints[91] = 111765;
-        _this16.UserStorage.levelPoints[92] = 116095;
-        _this16.UserStorage.levelPoints[92] = 116095;
-        _this16.UserStorage.levelPoints[93] = 120550;
-        _this16.UserStorage.levelPoints[94] = 125130;
-        _this16.UserStorage.levelPoints[95] = 129835;
-        _this16.UserStorage.levelPoints[96] = 134675;
-        _this16.UserStorage.levelPoints[97] = 139650;
-        _this16.UserStorage.levelPoints[98] = 144760;
-        _this16.UserStorage.levelPoints[99] = 150005;
-        _this16.UserStorage.levelPoints[100] = 155385;
+        _this18.UserStorage.levelPoints[75] = 57885;
+        _this18.UserStorage.levelPoints[76] = 60485;
+        _this18.UserStorage.levelPoints[77] = 63180;
+        _this18.UserStorage.levelPoints[78] = 65970;
+        _this18.UserStorage.levelPoints[79] = 68855;
+        _this18.UserStorage.levelPoints[80] = 71835;
+        _this18.UserStorage.levelPoints[81] = 74920;
+        _this18.UserStorage.levelPoints[82] = 78110;
+        _this18.UserStorage.levelPoints[83] = 81405;
+        _this18.UserStorage.levelPoints[84] = 84805;
+        _this18.UserStorage.levelPoints[85] = 88310;
+        _this18.UserStorage.levelPoints[86] = 91930;
+        _this18.UserStorage.levelPoints[87] = 95665;
+        _this18.UserStorage.levelPoints[88] = 99515;
+        _this18.UserStorage.levelPoints[89] = 103480;
+        _this18.UserStorage.levelPoints[90] = 107560;
+        _this18.UserStorage.levelPoints[91] = 111765;
+        _this18.UserStorage.levelPoints[92] = 116095;
+        _this18.UserStorage.levelPoints[92] = 116095;
+        _this18.UserStorage.levelPoints[93] = 120550;
+        _this18.UserStorage.levelPoints[94] = 125130;
+        _this18.UserStorage.levelPoints[95] = 129835;
+        _this18.UserStorage.levelPoints[96] = 134675;
+        _this18.UserStorage.levelPoints[97] = 139650;
+        _this18.UserStorage.levelPoints[98] = 144760;
+        _this18.UserStorage.levelPoints[99] = 150005;
+        _this18.UserStorage.levelPoints[100] = 155385;
 
-        _this16.Actions = {
+        _this18.Actions = {
             HEADER: function HEADER(le) {
                 le.createCapChanger();
 
@@ -2504,19 +2669,19 @@ var LevelExtension = function (_Script4) {
 
         };
 
-        _this16.UpdateActions = [{
+        _this18.UpdateActions = [{
             pattern: new RegExp('https?://www.kongregate.com', 'i'),
-            actions: [_this16.Actions.HEADER, _this16.Actions.HOVER_BOX, _this16.Actions.LEVELBUG]
+            actions: [_this18.Actions.HEADER, _this18.Actions.HOVER_BOX, _this18.Actions.LEVELBUG]
         }, {
             pattern: new RegExp('https?://www.kongregate.com/accounts/', 'i'),
-            actions: [_this16.Actions.PROFILE]
+            actions: [_this18.Actions.PROFILE]
         }, {
             pattern: new RegExp('https?://www.kongregate.com/games/', 'i'),
-            actions: [_this16.Actions.CHAT]
+            actions: [_this18.Actions.CHAT]
         }];
 
-        _this16.KongScript = function () {};
-        _this16.KongScript.prototype = {
+        _this18.KongScript = function () {};
+        _this18.KongScript.prototype = {
 
             CHECK_TIMEOUT: 10, // seconds before reaching timeout
             CHECK_INTERVAL: 100, // milliseconds between class existance check
@@ -2558,11 +2723,11 @@ var LevelExtension = function (_Script4) {
 
         };
 
-        _this16.ProfileUser = function () {
+        _this18.ProfileUser = function () {
             this.points = null;
             this.level = null;
         };
-        _this16.ProfileUser.prototype = {
+        _this18.ProfileUser.prototype = {
 
             /**
              *	Return points based on the points in the loaded profile page.
@@ -2619,12 +2784,12 @@ var LevelExtension = function (_Script4) {
 
         };
 
-        _this16.LevelCapUser = function (username) {
+        _this18.LevelCapUser = function (username) {
             this.username = username;
             this.points = null;
             this.level = null;
         };
-        _this16.LevelCapUser.prototype = {
+        _this18.LevelCapUser.prototype = {
 
             /**
              *	Return the user points. If points weren't loaded, it will load them
@@ -2673,10 +2838,10 @@ var LevelExtension = function (_Script4) {
 
         };
 
-        _this16.ChatUserStorage = function () {
+        _this18.ChatUserStorage = function () {
             this.users = {};
         };
-        _this16.ChatUserStorage.prototype = {
+        _this18.ChatUserStorage.prototype = {
             /**
              *	Return the level of the user.
              *
@@ -2690,20 +2855,20 @@ var LevelExtension = function (_Script4) {
             }
 
         };
-        return _this16;
+        return _this18;
     }
 
     _createClass(LevelExtension, [{
         key: "run",
         value: function run() {
-            var _this17 = this;
+            var _this19 = this;
 
             window.addEventListener('load', function () {
-                _this17.createLevelbugCSS();
-                _this17.getFakeMaxLevel();
-                _this17.UpdateActions.forEach(function (uAction, i, arr) {
+                _this19.createLevelbugCSS();
+                _this19.getFakeMaxLevel();
+                _this19.UpdateActions.forEach(function (uAction, i, arr) {
                     if (uAction.pattern.test(document.URL)) uAction.actions.forEach(function (f, i, arr) {
-                        f(_this17);
+                        f(_this19);
                     });
                 });
             });
@@ -2950,7 +3115,7 @@ var LevelExtension = function (_Script4) {
     }, {
         key: "createCapChanger",
         value: function createCapChanger() {
-            var _this18 = this;
+            var _this20 = this;
 
             var levelCapChanger = document.createElement('li');
 
@@ -2963,7 +3128,7 @@ var LevelExtension = function (_Script4) {
             linkCapChanger.innerHTML = 'Level cap';
             linkCapChanger.href = '#';
             linkCapChanger.addEventListener('click', function () {
-                _this18.setFakeMaxLevel();
+                _this20.setFakeMaxLevel();
             });
             levelCapChanger.appendChild(linkCapChanger);
 
@@ -2990,8 +3155,8 @@ var LevelExtension = function (_Script4) {
 
 //=require ../holodeckScript.js
 
-var PmNotifier = function (_HolodeckScript11) {
-    _inherits(PmNotifier, _HolodeckScript11);
+var PmNotifier = function (_HolodeckScript12) {
+    _inherits(PmNotifier, _HolodeckScript12);
 
     function PmNotifier() {
         _classCallCheck(this, PmNotifier);
@@ -3158,8 +3323,8 @@ var PostCount = function (_Script5) {
 
 //=require ../holodeckScript.js
 
-var ReplyCommand = function (_HolodeckScript12) {
-    _inherits(ReplyCommand, _HolodeckScript12);
+var ReplyCommand = function (_HolodeckScript13) {
+    _inherits(ReplyCommand, _HolodeckScript13);
 
     function ReplyCommand() {
         _classCallCheck(this, ReplyCommand);
@@ -3232,10 +3397,10 @@ var ShowScriptOptions = function (_Script6) {
     function ShowScriptOptions() {
         _classCallCheck(this, ShowScriptOptions);
 
-        var _this22 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true, Script.CATEGORIES.HIDDEN));
+        var _this24 = _possibleConstructorReturn(this, (ShowScriptOptions.__proto__ || Object.getPrototypeOf(ShowScriptOptions)).call(this, 'this', /^\//, true, Script.CATEGORIES.HIDDEN));
 
-        _this22.scripts = [];
-        return _this22;
+        _this24.scripts = [];
+        return _this24;
     }
 
     _createClass(ShowScriptOptions, [{
@@ -3322,8 +3487,8 @@ var ShowScriptOptions = function (_Script6) {
 
 //=require ../holodeckScript.js
 
-var SpamIstTot = function (_HolodeckScript13) {
-    _inherits(SpamIstTot, _HolodeckScript13);
+var SpamIstTot = function (_HolodeckScript14) {
+    _inherits(SpamIstTot, _HolodeckScript14);
 
     function SpamIstTot() {
         _classCallCheck(this, SpamIstTot);
@@ -3984,8 +4149,8 @@ var ThreadWatcher = function (_Script7) {
 }(Script);
 //=require ../holodeckScript.js
 
-var UsernameCompletion = function (_HolodeckScript14) {
-    _inherits(UsernameCompletion, _HolodeckScript14);
+var UsernameCompletion = function (_HolodeckScript15) {
+    _inherits(UsernameCompletion, _HolodeckScript15);
 
     function UsernameCompletion() {
         _classCallCheck(this, UsernameCompletion);
@@ -4067,8 +4232,8 @@ var UsernameCompletion = function (_HolodeckScript14) {
 
 //=require ../holodeckScript.js
 
-var WhisperCatch = function (_HolodeckScript15) {
-    _inherits(WhisperCatch, _HolodeckScript15);
+var WhisperCatch = function (_HolodeckScript16) {
+    _inherits(WhisperCatch, _HolodeckScript16);
 
     function WhisperCatch() {
         _classCallCheck(this, WhisperCatch);
@@ -4079,12 +4244,12 @@ var WhisperCatch = function (_HolodeckScript15) {
     _createClass(WhisperCatch, [{
         key: "run",
         value: function run() {
-            var _this27 = this;
+            var _this29 = this;
 
             var dom = this.dom;
             var CDialogue = dom.ChatDialogue;
             var removeWhisper = function removeWhisper(w) {
-                _this27.removeWhisper(w);
+                _this29.removeWhisper(w);
             };
 
             holodeck.__wc_whisperCount = 0;
@@ -4101,7 +4266,7 @@ var WhisperCatch = function (_HolodeckScript15) {
             };
 
             this.__wc_interval = setInterval(function () {
-                _this27.restoreWhispers();
+                _this29.restoreWhispers();
             }, WhisperCatch.CHAT_DIALOGUE_RETRY);
 
             holodeck.addChatCommand('wctime', function (holodeck, str) {
@@ -4171,7 +4336,7 @@ WhisperCatch.CHAT_DIALOGUE_RETRY = 100;
     }
 
     var optionsScript = new ShowScriptOptions();
-    var scripts = [optionsScript, new ChatTimestamp(), new PmNotifier(), new ChatLineHighlight(), new ReplyCommand(), new UsernameCompletion(), new ChatMouseoverTimestamp(), new AfkCommand(), new ChatCharacterLimit(), new KongreLink(), new ChatResizer(), new Kongquer(), new WhisperCatch(), new LargerAvatars(), new BetterQuotes(), new PostCount(), new LevelExtension(), new ThreadWatcher(), new SpamIstTot(), new ImagePreview(), new ChatLog()];
+    var scripts = [optionsScript, new ChatTimestamp(), new PmNotifier(), new ChatLineHighlight(), new ReplyCommand(), new UsernameCompletion(), new ChatMouseoverTimestamp(), new AfkCommand(), new ChatCharacterLimit(), new KongreLink(), new ChatResizer(), new Kongquer(), new WhisperCatch(), new LargerAvatars(), new BetterQuotes(), new PostCount(), new LevelExtension(), new ThreadWatcher(), new SpamIstTot(), new ImagePreview(), new ChatLog(), new JoinChatRoom()];
 
     optionsScript.scripts = scripts;
 

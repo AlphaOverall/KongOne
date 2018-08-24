@@ -36,20 +36,16 @@ class ChatRoomList {
         // If list already exists, return it as a promise
         if (rooms.list) return new Promise(resolve => resolve(rooms.list.slice()));
         // Otherwise query for list
-        return fetch(`${location.origin}/rooms.js`)
-        .then(response => response.text())
-        .then(data => {
+        return jQuery.getJSON(`${location.origin}/rooms.js`).always(result => {
             try {
-                rooms.list = rooms.parseList(JSON.parse(data.slice(20, -3)));
+                rooms.list = rooms.parseList(JSON.parse(result.responseText.slice(20, -3)));
                 rooms.loaded = true;
-                return rooms.list.slice();
+                return new Promise(resolve => resolve(rooms.list.slice()));
             } catch (ex) {
                 console.log("[KongOne]: Could not load room list for current chatroom change script");
                 console.error(ex);
                 return Promise.reject(Error(ex));
             }
-        }).catch(error => {
-            return Promise.reject(Error(error.message));
         });
     }
 }

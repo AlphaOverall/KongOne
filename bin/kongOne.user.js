@@ -1775,20 +1775,18 @@ var ChatRoomList = function () {
                 return resolve(rooms.list.slice());
             });
             // Otherwise query for list
-            return fetch(location.origin + "/rooms.js").then(function (response) {
-                return response.text();
-            }).then(function (data) {
+            return jQuery.getJSON(location.origin + "/rooms.js").always(function (result) {
                 try {
-                    rooms.list = rooms.parseList(JSON.parse(data.slice(20, -3)));
+                    rooms.list = rooms.parseList(JSON.parse(result.responseText.slice(20, -3)));
                     rooms.loaded = true;
-                    return rooms.list.slice();
+                    return new Promise(function (resolve) {
+                        return resolve(rooms.list.slice());
+                    });
                 } catch (ex) {
                     console.log("[KongOne]: Could not load room list for current chatroom change script");
                     console.error(ex);
                     return Promise.reject(Error(ex));
                 }
-            }).catch(function (error) {
-                return Promise.reject(Error(error.message));
             });
         }
     }]);

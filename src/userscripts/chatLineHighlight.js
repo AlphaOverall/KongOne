@@ -255,7 +255,7 @@ class ChatLineHighlight extends HolodeckScript {
                     botMessage("Playing chime: " +
                         (holodeck._hl_chime ?
                             (typeof holodeck._pm_chime !== "undefined" ? "Yes" :
-                                'No, <a href="http://userscripts.org/scripts/show/65622">script</a> not installed') :
+                                'Script not installed') :
                             "No"));
                     return false;
                 });

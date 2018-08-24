@@ -385,7 +385,7 @@ class ThreadWatcher extends Script {
 
         function pullWatchedThreadsAndRecentPosts() {
             localStorage.setItem(window._PULL_ID, new Date());
-            new Ajax.Request('https://www.kongregate.com/users/' + active_user.id() + '/posts.json', {
+            new Ajax.Request(`${location.origin}/users/` + active_user.id() + '/posts.json', {
                 method:'get',
                 onSuccess: function(transport){ 
                     var json = transport.responseText.evalJSON();console.log("Found users", json.users.length);
@@ -478,7 +478,7 @@ class ThreadWatcher extends Script {
             var forumID = storedThread.forumID;
             var seenPostCount = storedThread.seenPostCount;
             console.log("[Thread Watcher] We are making a request to:", 'https://www.kongregate.com/forums/' + forumID + '/topics/' + processThreadID + '.json');
-            new Ajax.Request('https://www.kongregate.com/forums/' + forumID + '/topics/' + processThreadID + '.json', {
+            new Ajax.Request(`${location.origin}/forums/` + forumID + '/topics/' + processThreadID + '.json', {
                 method:'get',
                 onSuccess: function(transport){ 
                     console.log("[Thread Watcher] We got a response to:", 'https://www.kongregate.com/forums/' + forumID + '/topics/' + processThreadID + '.json');

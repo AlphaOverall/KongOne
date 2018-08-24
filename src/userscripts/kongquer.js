@@ -219,25 +219,26 @@ class Kongquer extends HolodeckScript {
         var roomDetails = l.chatWindow().activeRoom();
         var allUsers = roomDetails.users();
         var highFans = "";
-        var highestFans = 0;
-        var count = 0;
-        var content;
+        var count = 0, users = [], finished = 0;
 
-        let f = (evt) => { amount = evt.responseText; };
-        for(var i=0; i < allUsers.length; i++){
-            var username = allUsers[i].username;
-            var url = "http://www.kongregate.com/accounts/" + username +"#user_followers";
-            var request = new XMLHttpRequest();
-            var amount;
-            request.addEventListener("load", f, false);
-
-            request.open("GET", url, true);
-            request.send();
-            var div = document.createElement("div");
-            div.innerHTML = amount;
-            var a = div.getElementsByTagName("li");
-        }
-        l.activeDialogue().displayUnsanitizedMessage("Highest Fans in Room", content, {"class":"whisper received_whisper"}, {non_user: true});
+        var gets = allUsers.map(function(user) {
+            return jQuery.get(`${location.origin}/accounts/${user.username}`, function(data) {
+                finished++;
+                var div = jQuery(data);
+                var ncount = parseInt(jQuery(div).find("#user_followers").text().replace(/\D/g, ""));
+                if (ncount > count) {
+                    count = ncount;
+                    users = [user.username];
+                } else if (ncount === count) {
+                    users.push(user.username);
+                }
+                if (finished === allUsers.length) {
+                    l.activeDialogue().displayUnsanitizedMessage("Highest Fans in Room", 
+                    `${count} for user${users.length > 1 ? "s" : ""} ${users.join(", ")}`,
+                    {"class":"whisper received_whisper"}, {non_user: true});
+                }
+            });
+        });
         return false;
     });
 
@@ -341,7 +342,7 @@ class Kongquer extends HolodeckScript {
                             l.activeDialogue().displayUnsanitizedMessage("Moderator Room Ids", user._moderator_room_ids.join(", "), {"class":"whisper received_whisper"}, {non_user: true});
                         }
                     }
-                    l.activeDialogue().displayUnsanitizedMessage("Playing", "<a href=\"http://www.kongregate.com" + user._game_url + "\" target=\"_blank\">" + user._game_title + "</a>", {"class":"whisper received_whisper"}, {non_user: true});
+                    l.activeDialogue().displayUnsanitizedMessage("Playing", `<a href="${location.origin + user._game_url}" target="_blank">${user._game_title}</a>`, {"class":"whisper received_whisper"}, {non_user: true});
                     l.activeDialogue().displayUnsanitizedMessage("Presence", user._presence, {"class":"whisper received_whisper"}, {non_user: true});
                     l.activeDialogue().displayUnsanitizedMessage("Role", user._role, {"class":"whisper received_whisper"}, {non_user: true});
                     return false;
@@ -370,7 +371,7 @@ class Kongquer extends HolodeckScript {
     holodeck.addChatCommand("available", function(l,n){
         var z = n.match(/^\/\S+\s+(.+)/);
         if (z){
-            l.activeDialogue().displayUnsanitizedMessage("Kong Bot", "Availability of " + z[1] + ":<iframe src=\"httP://www.kongregate.com/accounts/availability?username=" + z[1] + "\" width=\"100%\" height=\"30\"></iframe>", {"class":"whisper received_whisper"}, {non_user: true});
+            l.activeDialogue().displayUnsanitizedMessage("Kong Bot", `Availability of ${z[1]}:<iframe src="${location.origin}/accounts/availability?username=${z[1]}" width="100%" height="30"></iframe>`, {"class":"whisper received_whisper"}, {non_user: true});
         }
         return false;
     });
@@ -380,7 +381,7 @@ class Kongquer extends HolodeckScript {
         var room = info._room;
         l.activeDialogue().displayUnsanitizedMessage("Room Name", room.name, {"class":"whisper received_whisper"}, {non_user: true});
         l.activeDialogue().displayUnsanitizedMessage("Room ID", room.id, {"class":"whisper received_whisper"}, {non_user: true});
-        l.activeDialogue().displayUnsanitizedMessage("Room Owner", "<a href=\"http://www.kongregate.com/accounts/" + room.owner + "\" target=\"_blank\">" + room.owner + "</a>", {"class":"whisper received_whisper"}, {non_user: true});
+        l.activeDialogue().displayUnsanitizedMessage("Room Owner", room.owner ? `<a href="${location.origin}/accounts/${room.owner}" target="_blank">${room.owner}</a>` : "none", {"class":"whisper received_whisper"}, {non_user: true});
         l.activeDialogue().displayUnsanitizedMessage("Room Type", room.type, {"class":"whisper received_whisper"}, {non_user: true});
         l.activeDialogue().displayUnsanitizedMessage("Favorite Room", info._favorite_room, {"class":"whisper received_whisper"}, {non_user: true});
         l.activeDialogue().displayUnsanitizedMessage("Users In Room", info._number_in_room_node.innerText, {"class":"whisper received_whisper"}, {non_user: true});
@@ -404,8 +405,8 @@ class Kongquer extends HolodeckScript {
     holodeck.addChatCommand("friends", function(l,n){
         var kongfriends = l._chat_window._friends;
         var final = [];
-        for(var friend in kongfriends){
-            final.push("<a href=\"http://www.kongregate.com/accounts/" + friend + "\" target=\"_blank\">" + friend + "</a>");
+        for (var friend in kongfriends){
+            final.push(`<a href="${location.origin}/accounts/${friend}" target="_blank">${friend}</a>`);
         }
         l.activeDialogue().displayUnsanitizedMessage("Friends", final.join(", "), {"class":"whisper received_whisper"}, {non_user: true});
         return false;
@@ -423,20 +424,20 @@ class Kongquer extends HolodeckScript {
 
     holodeck.addChatCommand("open", function(l,n){
         var z = n.match(/^\/\S+\s+(.+)/);
-        if (z[1]) {
-            m = z[1].split(" ");
+        if (z && z[1]) {
+            var m = z[1].split(" ");
             if (m[0] == "accounts"){
                 if (m[1]){
-                    open("http://www.kongregate.com/accounts/" + m[1], "_blank");
+                    open(`${location.origin}/accounts/${m[1]}`, "_blank");
                 }
                 else{
-                    open("http://www.kongregate.com/accounts/" + l._active_user._attributes._object.username);
+                    open(`${location.origin}/accounts/${l._active_user._attributes._object.username}`);
                 }
             }
             else if (m[0] == "games"){
                 if (m[1]) {
                     if (m[2]){
-                        open("http://www.kongregate.com/games/" + m[1] + "/" + m[2], "_blank");
+                        open(`${location.origin}/games/${m[1]}/${m[2]}`, "_blank");
                     }
                     else{
                         l.activeDialogue().displayUnsanitizedMessage("Kong Bot", "No specified game", {"class":"whisper received_whisper"}, {non_user: true});
@@ -447,26 +448,26 @@ class Kongquer extends HolodeckScript {
                 }
             }
             else {
-                open("http://www.kongregate.com/search?q=" + z[1], "_blank");
+                open(`${location.origin}/search?q=${z[1]}`, "_blank");
             }
         }
         else {
-            open("http://www.kongregate.com/accounts/" + l._active_user._attributes._object.username);
+            open(`${location.origin}/accounts/${l._active_user._attributes._object.username}`);
         }
         return false;
     });
 
     holodeck.addChatCommand("khelp", function(l,n){
-        open("http://www.kongregate.com/pages/help", "_blank");
+        open(`${location.origin}/pages/help`, "_blank");
         return false;
     });
 
     holodeck.addChatCommand("kong", function(l,n){
-        open("http://www.kongregate.com", "_blank");
+        open(`${location.origin}`, "_blank");
         return false;
     });
     holodeck.addChatCommand("help", function(l,n){
-        open("http://www.alphaoverall.com", "_blank");
+        open("https://greasyfork.org/en/scripts/9905-kongregate-one", "_blank");
         return false;
     });
     holodeck.addChatCommand("signup", function(l,n){
@@ -659,66 +660,7 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
         holodeck._active_dialogue.clear();
         return false;
     });
-    // holodeck.addChatCommand("report", function(l,n){
-    //     var z = n.match(/^\/\S+\s+(.+)/);
-    //     if (z) {
-    //         m = z[1].split(" ");
-    //         if (m[0] == "help"){
-    //             l.activeDialogue().displayUnsanitizedMessage("Report Help", "To report someone, type /report username message, or just /report username. Both cases will bring up the report box in chat.", {"class":"whisper received_whisper"}, {non_user: true});
-    //         }
-    //         else if (m[0] == null){
-    //             l.activeDialogue().displayUnsanitizedMessage("Report", "Invalid report format", {"class":"whisper received_whisper"}, {non_user: true});
-    //         }
-    //         else {
-    //             var message;
-    //             if (m[1] != undefined) {
-    //                 var m2 = m.join(" ");
-    //                 message = m2.substr(m2.indexOf(' ')+1);
-    //             }
-    //             else { message = "";}
-    //             active_room.showChatNag(' ' +
-    //                                                          '<div id="new_abuse_report" class="mvm mrl"><div id="abuse_form_internal" class="cntrBasic pam">' +
-    //                                                          '<form accept-charset="UTF-8" action="http://www.kongregate.com/accounts/' + m[0] + '/abuse_reports" method="post" onsubmit="new Ajax.Request(\'http://www.kongregate.com/accounts/aidansos132231/abuse_reports\', {asynchronous:true, evalScripts:true, method:\'post\', parameters:Form.serialize(this)}); return false;"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="ub9xDEoiIi+lRAPWsUL2yApjKAbA2XKTjRO/taF1zwE="></div>' +
-    //                                                          '<dl>' +
-    //                                                          '<dd class="report_options"><select id="select_type" label="Abuse Type" name="type" onchange="subjectChanged(\'' + m[0] + '\')">' +
-    //                                                          '<option value="InappropriateUsernameReport">Inappropriate Username</option>' +
-    //                                                          '<option value="InappropriateAvatarReport">Inappropriate Avatar</option>' +
-    //                                                          '<option value="InappropriateProfileReport">Offensive Profile Content</option>' +
-    //                                                          '<option selected="selected" value="InappropriateChatReport">Chat Behavior</option>' +
-    //                                                          '<option value="OtherAbuseReport">Other</option></select></dd>' +
-    //                                                          '<div id="description_field">' +
-    //                                                          '<dd class="form_block" id="abuse_report_description_block">' +
-    //                                                          '<dl>' +
-    //                                                          '<span class="error_block error" id="abuse_report_description_error_block">' +
-    //
-    //                                                          '</span>' +
-    //                                                          '<dd class="label_block" id="abuse_report_description_label_block">' +
-    //                                                          '<label for="abuse_report_description" id="abuse_report_description_label">Please describe your reason for reporting ' + m[0] + ' using as much detail as possible. We don\'t need chat logs:</label>' +
-    //                                                          '</dd>' +
-    //                                                          '<dd id="abuse_report_description_control_block" class="input_block"><textarea cols="55" id="abuse_report_description" name="abuse_report[description]" rows="4">' + message + '</textarea></dd>' +
-    //                                                          '</dl>' +
-    //                                                          '</dd>' +
-    //
-    //                                                          '</div>' +
-    //                                                          '</dl>' +
-    //
-    //                                                          '<p class="report_submission">' +
-    //                                                          '<input class="submission_button" id="abuse_form_submit" onclick="try{}catch(e){};if(!this.elem_abuse_form_submit){this.elem_abuse_form_submit=$(\'abuse_form_submit\');this.spin_abuse_form_submit=$(\'abuse_form_submit_spinner\');this.restore=function(t){return function(){t.elem_abuse_form_submit.show();t.spin_abuse_form_submit.hide();Event.stopObserving(window, \'unload\', t.restore);}}(this);}this.elem_abuse_form_submit.hide();this.spin_abuse_form_submit.show();Event.observe(window, \'unload\', this.restore);" type="submit" value="submit"><span class="spinner" id="abuse_form_submit_spinner" style="display:none" title="loading…">​</span>' +
-    //                                                          '<a href="#" onclick="$(\'abuse_form_internal\').remove(); return false;">cancel</a>' +
-    //                                                          '</p>' +
-    //                                                          '</form></div>' +
-    //                                                          '</div>', {"class":"whisper received_whisper"}, {non_user: true});
-    //
-    //         }
-    //     }
-    //     return false;
-    // });
-    holodeck.addChatCommand("cry", function(l,n){
-        l.activeDialogue().displayUnsanitizedMessage("You're sad!", "(　-̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥᷄◞ω◟-̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥̥᷅ )", {"class":"whisper received_whisper"}, {non_user: true});
-        return false;
-    });
     holodeck._chat_commands.wiki = holodeck._chat_commands.wikipedia;
-    holodeck._chat_commands.weep = holodeck._chat_commands.krie = holodeck._chat_commands.cry;
     holodeck._chat_commands.lol = holodeck._chat_commands.hi = holodeck._chat_commands.hmm = holodeck._chat_commands.test;
     holodeck._chat_commands.userlist = holodeck._chat_commands.username = holodeck._chat_commands.list;
     holodeck._chat_commands.date = holodeck._chat_commands.datetime = holodeck._chat_commands.now = holodeck._chat_commands.time;

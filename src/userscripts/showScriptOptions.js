@@ -44,13 +44,12 @@ class ShowScriptOptions extends Script {
             
             function toggleScript() {
                 console.log("[KongOne] Toggled script");
-                GM_setValue(this.id,this.checked);
+                GM_setValue(this.id, this.checked);
             }
         });
 
         for (let category in categories) {
             let catdiv = categories[category];
-            console.log(catdiv);
             if (catdiv.childElementCount > 1) {
                 div.insert(catdiv);
             }
@@ -62,7 +61,7 @@ class ShowScriptOptions extends Script {
         exitCon.insert(exit);
         div.insert(exitCon);
         var note = new Element("p", {"style":"text-align:center"}).update("Refresh to apply your changes. ");
-        var anchor = new Element("a", {"href": "http://www.kongregate.com/forums/1/topics/614435", "target":"_blank"}).update("Check out script thread.");
+        var anchor = new Element("a", {"href": "https://www.kongregate.com/forums/1/topics/614435", "target":"_blank"}).update("Check out script thread.");
         note.insert(anchor);
         exitCon.insert(note);
         var sOB = document.getElementById("welcome_box_sign_out");

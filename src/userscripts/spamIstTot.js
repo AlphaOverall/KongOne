@@ -14,7 +14,7 @@ class SpamIstTot extends HolodeckScript {
                 var count = a.getElementsByClassName('spam-count')[0],
                     amount = parseInt(count.getAttribute('amount'));
                 count.innerHTML = 'x' + (amount + 1);
-                count.setAttribute('amount', amount + 1)
+                count.setAttribute('amount', amount + 1);
             } else {
                 a.getElementsByTagName('p')[0].innerHTML += '<span amount="2" class="spam-count" style="float: right; color: #888">x2</span>';
             }
@@ -56,15 +56,15 @@ class SpamIstTot extends HolodeckScript {
 
                     if (c && c.timestamp) {
                         var f = $j(e).children(".chat-message").filter(function () {
-                            return $j(this).data("timestamp") > c.timestamp
+                            return $j(this).data("timestamp") > c.timestamp;
                         });
                         0 < f.length ? ($j(a).data(c).insertBefore(f.first()),
-                            r = !1) : $j(a).data(c).appendTo(e)
+                            r = !1) : $j(a).data(c).appendTo(e);
                     } else $j(a).appendTo(e);
                     r && d.scrollToBottom();
-                    b && b()
-                })
-            })
+                    b && b();
+                });
+            });
         };
 
     }

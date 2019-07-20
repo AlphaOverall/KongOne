@@ -1,6 +1,8 @@
 # KongOneβ
 
-### Version 2.0
+### Version 3.0.0
+
+A major rework of the original KongOne. Documentation might be out of date. Please let us know if there is missing documentation or new bugs since this release.
 
 This userscript is an edit of <a href="http://www.kongregate.com/accounts/UnknownGuardian">UnknownGuardian</a>'s script called <A href="http://userscripts-mirror.org/scripts/show/164732">Kongregate One</a>.
 

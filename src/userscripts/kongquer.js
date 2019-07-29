@@ -636,7 +636,7 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
         return false;
     });
     holodeck.addChatCommand("reloadgame", function(l,n){
-        activateGame(); // Default function on Kongregate to reload/activate game
+        gameLoader.loadGame(""); // Default function on Kongregate to reload/activate game
         return false;
     });
     holodeck.addChatCommand("removegame", function(l, n) {

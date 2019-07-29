@@ -2438,20 +2438,14 @@ Math.round(a) =  integer closest to a <br> Math.sin(a) = sine of a<br>Math.sqrt(
                 return false;
             });
             holodeck.addChatCommand("reloadgame", function (l, n) {
+                document.getElementById("gameholder").style.display = "table-cell";
                 gameLoader.loadGame(""); // Default function on Kongregate to reload/activate game
                 return false;
             });
             holodeck.addChatCommand("removegame", function (l, n) {
                 try {
-                    var gametd = document.getElementById("gameholder");
-                    gametd.parentNode.removeChild(gametd);
-                    var width = document.getElementById("chat_container").offsetWidth;
-                    width = (width > 550 ? width + 5 : 570) + "px";
-                    document.getElementById("flashframecontent").style.width = width;
-                    document.getElementById("maingamecontent").style.width = width;
-                    var maingame = document.getElementById("maingame");
-                    maingame.style.width = width;
-                    maingame.style.height = parseInt(maingame.style.height) + 5 + "px";
+                    document.getElementById("gameiframe").src = "about:blank";
+                    document.getElementById("gameholder").style.display = "none";
                 } catch (e) {
                     l.activeDialogue().displayUnsanitizedMessage("Kong Bot", "No Game Found / Could not resize", { "class": "whisper received_whisper" }, { non_user: true });
                 }

@@ -2224,7 +2224,7 @@ var Kongquer = function (_HolodeckScript10) {
                 } else {
                     typeOf = "Points: " + kbotd.botd_reward_points;
                 } //Just in case
-                l.activeDialogue().displayUnsanitizedMessage("BOTD", "<img src=\"" + kbotd.botd_icon_uri + "\"></img>" + "<a href=\"" + kbotd.botd_game_uri + "\" target=\"_blank\">" + kbotd.botd_game_name + " - " + kbotd.botd_description + "</a> " + typeOf, { "class": "whisper received_whisper" }, { non_user: true });
+                l.activeDialogue().displayUnsanitizedMessage("BOTD", "<img src=\"https://cdn2.kongcdn.com" + kbotd.botd_icon_uri + "\"></img><a href=\"" + kbotd.botd_game_uri + "\" target=\"_blank\">" + kbotd.botd_game_name + " - " + kbotd.botd_description + "</a> " + typeOf, { "class": "whisper received_whisper" }, { non_user: true });
                 return false;
             });
 

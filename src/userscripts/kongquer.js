@@ -274,7 +274,7 @@ class Kongquer extends HolodeckScript {
         var mods = [];
         for(var i=0; i < allUsers.length; i++){
             if (allUsers[i]._moderator_room_ids.length > 0 || allUsers[i]._moderator_game_ids.length > 0){
-                mods.push(allUsers[i].username);
+                mods.push(makeLink(allUsers[i].username));
             }
         }
         l.activeDialogue().displayUnsanitizedMessage("Mods in room", mods.join(", "), {"class":"whisper received_whisper"}, {non_user: true});

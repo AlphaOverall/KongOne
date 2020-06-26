@@ -4388,6 +4388,7 @@ WhisperCatch.CHAT_DIALOGUE_RETRY = 100;
         };
     }
 
+<<<<<<< HEAD
     if (window.ChatDialogue) {
         ChatDialogue.prototype.initialize = ChatDialogue.prototype.initialize.wrap(function (old, parent_node, onInputFunction, holodeck, user_manager) {
             old(parent_node, onInputFunction, holodeck, user_manager);
@@ -4400,6 +4401,18 @@ WhisperCatch.CHAT_DIALOGUE_RETRY = 100;
             this._onInputFunction = onInputFunction;
         });
     }
+=======
+    ChatDialogue.prototype.initialize = ChatDialogue.prototype.initialize.wrap(function (old, parent_node, onInputFunction, holodeck, user_manager) {
+        old(parent_node, onInputFunction, holodeck, user_manager);
+        this._messages_until_next_collection = 0;
+        this._holodeck = holodeck;
+        this._user_manager = user_manager;
+        this._parent_node = parent_node;
+        this._messages_count = 0;
+        this._insertion_count = 0;
+        this._onInputFunction = onInputFunction;
+    });
+>>>>>>> master
 
     var optionsScript = new ShowScriptOptions();
     var scripts = [optionsScript, new VersionCheck(), new ChatTimestamp(), new PmNotifier(), new ChatLineHighlight(), new ReplyCommand(), new UsernameCompletion(), new ChatMouseoverTimestamp(), new AfkCommand(), new ChatCharacterLimit(), new KongreLink(), new ChatResizer(), new Kongquer(), new WhisperCatch(), new LargerAvatars(), new BetterQuotes(), new PostCount(), new LevelExtension(), new ThreadWatcher(), new SpamIstTot(), new ImagePreview(), new ChatLog(), new JoinChatRoom()];

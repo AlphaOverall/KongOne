@@ -16,17 +16,19 @@
         };
     }
 
-    ChatDialogue.prototype.initialize = ChatDialogue.prototype.initialize.wrap(
-        function(old, parent_node, onInputFunction, holodeck, user_manager) {
-          old(parent_node, onInputFunction, holodeck, user_manager);
-          this._messages_until_next_collection = 0;
-          this._holodeck = holodeck;
-          this._user_manager = user_manager;
-          this._parent_node = parent_node;
-          this._messages_count = 0;
-          this._insertion_count = 0;
-          this._onInputFunction = onInputFunction;
-      });
+    if (window.ChatDialogue) {
+        ChatDialogue.prototype.initialize = ChatDialogue.prototype.initialize.wrap(
+            function(old, parent_node, onInputFunction, holodeck, user_manager) {
+            old(parent_node, onInputFunction, holodeck, user_manager);
+            this._messages_until_next_collection = 0;
+            this._holodeck = holodeck;
+            this._user_manager = user_manager;
+            this._parent_node = parent_node;
+            this._messages_count = 0;
+            this._insertion_count = 0;
+            this._onInputFunction = onInputFunction;
+        });
+    }
 
     
     let optionsScript = new ShowScriptOptions();

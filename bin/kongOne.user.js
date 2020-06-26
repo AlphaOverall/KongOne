@@ -4388,7 +4388,7 @@ WhisperCatch.CHAT_DIALOGUE_RETRY = 100;
         };
     }
 
-    if (window.ChatDialogue) {
+    if (unsafeWindow.ChatDialogue) {
         ChatDialogue.prototype.initialize = ChatDialogue.prototype.initialize.wrap(function (old, parent_node, onInputFunction, holodeck, user_manager) {
             old(parent_node, onInputFunction, holodeck, user_manager);
             this._messages_until_next_collection = 0;

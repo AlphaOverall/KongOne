@@ -16,7 +16,7 @@
         };
     }
 
-    if (window.ChatDialogue) {
+    if (unsafeWindow.ChatDialogue) {
         ChatDialogue.prototype.initialize = ChatDialogue.prototype.initialize.wrap(
             function(old, parent_node, onInputFunction, holodeck, user_manager) {
             old(parent_node, onInputFunction, holodeck, user_manager);

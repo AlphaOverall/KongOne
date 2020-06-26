@@ -155,20 +155,6 @@ class ChatMouseoverTimestamp extends HolodeckScript {
             ChatDialogue.prototype.initialize =
                 ChatDialogue.prototype.initialize.wrap(function(old, parent_node, onInputFunction, holodeck, user_manager) {
                     old(parent_node, onInputFunction, holodeck, user_manager);
-                    //var self = this;
-                    //this._input_node.observe("keydown", function(event) {
-                    //	if(event.keyCode != 9 || event.ctrlKey || event.altKey || event.metaKey) return;
-                    //	self.onKeyPress(event);
-                    //});
-                    //})
-                    //ChatDialogue.prototype.initialize = function(parent_node, onInputFunction, holodeck, user_manager) {
-                    this._messages_until_next_collection = 0;
-                    this._holodeck = holodeck;
-                    this._user_manager = user_manager;
-                    this._parent_node = parent_node;
-                    this._messages_count = 0;
-                    this._insertion_count = 0;
-                    this._onInputFunction = onInputFunction;
                     this._message_rollover_manager = new MessageRollover(this);
 
                     // Establish references to re-used nodes

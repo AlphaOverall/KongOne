@@ -1,6 +1,6 @@
 # KongOneβ
 
-### Version 3.0.0
+### Version 3.0.1
 
 A major rework of the original KongOne. Documentation might be out of date. Please let us know if there is missing documentation or new bugs since this release.
 

@@ -3,11 +3,32 @@
 // @namespace        kongregate.com
 // @author           UnknownGuardian, AlphaOverall, Ruudiluca, Resterman
 // @version          3.0.0
-// @date             04/19/2013
+// @date             06/25/2020
 // @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
 // @grant            GM_addStyle
+// @grant			 GM_getValue
+// @grant			 GM_setValue
 // ==/UserScript==
+
+// SCRIPT VERSION (dom)
+// ^^ UPDATE this value in header / README.md as well ^^
+unsafeWindow.KongOneVersion = "3.0.0";
+
+// UPDATE as needed per release
+unsafeWindow.KongOneUpdateText = `
+<br>
+<b>What's new in this update?</b><br>
+Some of us worked on a major refactor behind the scenes that theoretically didn't affect the script functionalities much.<br>
+It added a way to toggle scripts on and off (Settings Cog -> KongOne), and added a few items.<br>
+However, it was never released or fully completed.<br>
+<br>
+Since a recent Kongregate update apparently broke the original Kongregate One scripts, I (AlphaOverall) did some updates on the refactor to fix the major scripts, did a little cleanup, and released this new version.
+I would rather have done more testing, but since the script was broken anyway I thought this was a good time to push out the changes and then you all can tell me if something is broken! :D<br>
+<br>
+Anyways, if you find issues, please log them on <a href='https://github.com/AlphaOverall/KongOne/issues'>GitHub</a> and I will try to fix them. I think I'm all alone now :(<br><br>
+Yours truly, --AlphaOverall
+`;
 
 "use strict";
 
@@ -4224,6 +4245,60 @@ var UsernameCompletion = function (_HolodeckScript15) {
     return UsernameCompletion;
 }(HolodeckScript);
 
+//=require ../script.js
+
+var VersionCheck = function (_Script8) {
+    _inherits(VersionCheck, _Script8);
+
+    function VersionCheck() {
+        _classCallCheck(this, VersionCheck);
+
+        var _this28 = _possibleConstructorReturn(this, (VersionCheck.__proto__ || Object.getPrototypeOf(VersionCheck)).call(this, 'this', /^\//, true, Script.CATEGORIES.HIDDEN));
+
+        _this28.previousVersion = GM_getValue("KongOneVersion", "1.2.5");
+        _this28.latestVersion = unsafeWindow.KongOneVersion;
+
+        // Next load, previous and latest should match
+        GM_setValue("KongOneVersion", _this28.latestVersion);
+        return _this28;
+    }
+
+    _createClass(VersionCheck, [{
+        key: "run",
+        value: function run() {
+            var dContainer = new Element("div", { "style": "background-color:#00000080;position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:10000;display:none;" });
+            var div = new Element("div", { "style": "background-color:#FFF;font:normal 11px/15px 'Lucida Grande',Verdana,Arial,sans-serif;padding:15px;display:none;position:fixed;transform:translate(-50%, -50%);top:50%;left:50%;z-index:10000;padding-bottom:50px;" }).update("<h2>Kongregate One Update</h2>Version: " + this.latestVersion + "<p></p>" + unsafeWindow.KongOneUpdateText);
+            dContainer.onclick = toggleVisibility;
+            document.body.appendChild(dContainer);
+            document.body.appendChild(div);
+
+            var exitCon = new Element("div", { "style": "width:100%;height:50px;bottom:0px;position:absolute;" });
+            var exit = new Element("button", { "class": "btn btn_wide btn_action", "style": "display:block;margin:6px auto auto;" }).update("Close");
+            exit.onclick = toggleVisibility;
+            exitCon.insert(exit);
+            div.insert(exitCon);
+            var anchor = new Element("a", { "href": "https://www.kongregate.com/forums/1/topics/614435", "target": "_blank" }).update("Check out script thread.");
+            exitCon.insert(anchor);
+
+            var gFrame = document.getElementById("game");
+            function toggleVisibility() {
+                if (dContainer.style.display != "none") {
+                    dContainer.style.display = "none";
+                    div.style.display = "none";
+                    if (gFrame) gFrame.style.visibility = "visible";
+                } else {
+                    dContainer.style.display = "";
+                    div.style.display = "";
+                    if (gFrame) gFrame.style.visibility = "hidden";
+                }
+            }
+            if (this.previousVersion !== this.latestVersion) toggleVisibility();
+        }
+    }]);
+
+    return VersionCheck;
+}(Script);
+
 //=require ../holodeckScript.js
 
 var WhisperCatch = function (_HolodeckScript16) {
@@ -4238,12 +4313,12 @@ var WhisperCatch = function (_HolodeckScript16) {
     _createClass(WhisperCatch, [{
         key: "run",
         value: function run() {
-            var _this29 = this;
+            var _this30 = this;
 
             var dom = this.dom;
             var CDialogue = dom.ChatDialogue;
             var removeWhisper = function removeWhisper(w) {
-                _this29.removeWhisper(w);
+                _this30.removeWhisper(w);
             };
 
             holodeck.__wc_whisperCount = 0;
@@ -4260,7 +4335,7 @@ var WhisperCatch = function (_HolodeckScript16) {
             };
 
             this.__wc_interval = setInterval(function () {
-                _this29.restoreWhispers();
+                _this30.restoreWhispers();
             }, WhisperCatch.CHAT_DIALOGUE_RETRY);
 
             holodeck.addChatCommand('wctime', function (holodeck, str) {
@@ -4330,7 +4405,7 @@ WhisperCatch.CHAT_DIALOGUE_RETRY = 100;
     }
 
     var optionsScript = new ShowScriptOptions();
-    var scripts = [optionsScript, new ChatTimestamp(), new PmNotifier(), new ChatLineHighlight(), new ReplyCommand(), new UsernameCompletion(), new ChatMouseoverTimestamp(), new AfkCommand(), new ChatCharacterLimit(), new KongreLink(), new ChatResizer(), new Kongquer(), new WhisperCatch(), new LargerAvatars(), new BetterQuotes(), new PostCount(), new LevelExtension(), new ThreadWatcher(), new SpamIstTot(), new ImagePreview(), new ChatLog(), new JoinChatRoom()];
+    var scripts = [optionsScript, new VersionCheck(), new ChatTimestamp(), new PmNotifier(), new ChatLineHighlight(), new ReplyCommand(), new UsernameCompletion(), new ChatMouseoverTimestamp(), new AfkCommand(), new ChatCharacterLimit(), new KongreLink(), new ChatResizer(), new Kongquer(), new WhisperCatch(), new LargerAvatars(), new BetterQuotes(), new PostCount(), new LevelExtension(), new ThreadWatcher(), new SpamIstTot(), new ImagePreview(), new ChatLog(), new JoinChatRoom()];
 
     optionsScript.scripts = scripts;
 

@@ -19,6 +19,7 @@
     let optionsScript = new ShowScriptOptions();
     let scripts = [
         optionsScript,
+        new VersionCheck(),
         new ChatTimestamp(),
         new PmNotifier(),
         new ChatLineHighlight(),

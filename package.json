@@ -1,0 +1,40 @@
+{
+  "name": "kong-one",
+  "version": "1.0.0",
+  "description": "### Version 1.2.4",
+  "main": "bin/kongOne.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlphaOverall/KongOne.git"
+  },
+  "keywords": [
+    "kongregate"
+  ],
+  "author": "AlphaOverall, NomuitJargon, resterman, Ruudiluca, UnknownGuardian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlphaOverall/KongOne/issues"
+  },
+  "homepage": "https://github.com/AlphaOverall/KongOne#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.18.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-include": "^2.3.1",
+    "gulp-jshint": "^2.0.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "jshint": "^2.9.4",
+    "pump": "^1.0.1"
+  },
+  "resolutions": {
+    "graceful-fs": "4.2.3"
+  }
+}

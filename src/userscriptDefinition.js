@@ -7,8 +7,6 @@
 // @include          *://www.kongregate.com/*
 // @description      Kongregate One - One script to rule them all. Everything here.
 // @grant            GM_addStyle
-// @grant			 GM_getValue
-// @grant			 GM_setValue
 // ==/UserScript==
 
 // SCRIPT VERSION (dom)

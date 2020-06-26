@@ -8,7 +8,8 @@ class ShowScriptOptions extends Script {
 
     run() {
         var dContainer = new Element("div", {"style":"background-color:#00000080;position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:10000;display:none;"});
-        var div = new Element("div", {"style":"background-color:#FFF;font:normal 11px/15px 'Lucida Grande',Verdana,Arial,sans-serif;padding:15px;display:none;position:fixed;transform:translate(-50%, -50%);top:50%;left:50%;z-index:10000;padding-bottom:50px;"}).update("<h2>Scripts</h2>Enable - Script Name<p></p>");
+        var div = new Element("div", {"style":"background-color:#FFF;font:normal 11px/15px 'Lucida Grande',Verdana,Arial,sans-serif;padding:15px;display:none;position:fixed;transform:translate(-50%, -50%);top:50%;left:50%;z-index:10000;padding-bottom:50px;"})
+            .update("<h2>Scripts (v" + unsafeWindow.KongOneVersion + ")</h2>Enable - Script Name<p></p>");
         dContainer.onclick = toggleVisibility;
         document.body.appendChild(dContainer);
         document.body.appendChild(div);

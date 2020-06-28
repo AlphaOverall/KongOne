@@ -250,8 +250,8 @@ Note that this is my (AlphaOverall's) edited version of this script and I hope t
 <p>&#8220;<code>/hlcolor ######</code>&#8221; &#8594; so, if we wanted all highlighted nicknames to show up in blue &#8211; with blue&#8217;s hex code being &#8220;0000ff&#8221; &#8211; for instance, we&#8217;d type:</p>
 <p>&#8220;<code>/hlcolor 0000ff</code>&#8221; &#8211; <em>no quotes, remember!</em></p>
 <p>For <strong>whisper colours</strong> type:</p>
-<p>&#8220;<code>/pmcolor ######</code>&#8221; &#8594; so, if we wanted all whispers to show up in red &#8211; with red&#8217;s hex code being &#8220;ff0000&#8221; &#8211; for instance, we&#8217;d type:</p>
-<p>&#8220;<code>/pmcolor ff0000</code>&#8221; &#8594; <em>golden rule: no quotes</em></p>
+<p>&#8220;<code>/whispercolor ######</code>&#8221; &#8594; so, if we wanted all whispers to show up in red &#8211; with red&#8217;s hex code being &#8220;ff0000&#8221; &#8211; for instance, we&#8217;d type:</p>
+<p>&#8220;<code>/whispercolor ff0000</code>&#8221; &#8594; <em>golden rule: no quotes</em></p>
 <p>For changing <strong>Moderator and Friend colours</strong>, type:</p>
 <p>&#8220;<code>/modcolor ######</code>&#8221; and<br />
 &#8220;<code>/friendcolor ######</code>&#8221;</p>

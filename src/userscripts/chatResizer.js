@@ -22,7 +22,7 @@ class ChatResizer extends HolodeckScript {
 
         if (dom.holodeck) {
             var holodeck = dom.holodeck;
-            holodeck.addChatCommand("size", function(l, n) {
+            holodeck.addChatCommand("size", (l, n) => {
                 var m = n.match(/^\/\S+\s+(\S+)/);
                 var o = n.match(/^\/\S+\s+(\d+)\s+(\d+)(?:\s+(\d+))?/);
 

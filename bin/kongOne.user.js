@@ -1238,8 +1238,8 @@ var ChatResizer = function (_HolodeckScript6) {
                         window.setTimeout(function () {
                             GM_deleteValue("kong_resize_" + location.pathname);
                         }, 0);
-                        this.setWidth(window._defaultChatWidth);
-                        this.setHeight(window._defaultChatHeight, window._defaultUserlistHeight, window._currentGameCentered);
+                        _this10.setWidth(window._defaultChatWidth);
+                        _this10.setHeight(window._defaultChatHeight, window._defaultUserlistHeight, window._currentGameCentered);
 
                         return false;
                     } else if (m && m[1] == "show") {
@@ -1273,8 +1273,8 @@ var ChatResizer = function (_HolodeckScript6) {
                         GM_setValue("kong_resize_" + location.pathname, width + "/" + height + "/" + listHeight);
                     }, 0);
                     l.activeDialogue().kongBotMessage("Resizing chat to " + width + "px/" + height + "px/" + listHeight + "px");
-                    this.setWidth(width);
-                    this.setHeight(height, listHeight, window._currentGameCentered);
+                    _this10.setWidth(width);
+                    _this10.setHeight(height, listHeight, window._currentGameCentered);
 
                     return false;
                 });
